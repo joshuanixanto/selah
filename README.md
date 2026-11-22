@@ -1,50 +1,38 @@
 # Selah
 
-A Windows Dynamic Island desktop companion built with **WPF and C#**.
+A lightweight Windows Dynamic Island companion built with WPF and C#.
 
-> Your desktop, in harmony.
+Selah takes interaction and feature inspiration from [Nusa](https://github.com/Hiroyki/nusa), while implementing its Windows UI and integrations independently in WPF. Nusa is MIT-licensed; see its repository for the original license and attribution requirements if any source code or assets are reused. Selah does not copy Nusa's bundled media, artwork, fonts, or other assets.
 
-## Technology
+## Current implementation
 
-- WPF for the desktop UI and window composition
-- C# on .NET 10
-- XAML for declarative layout and styling
+- Borderless, transparent, always-on-top island window.
+- Compact and expanded states with spring-style resize/position transitions.
+- Section navigation for Home, Music, Tasks, Focus, Prayer, Quran, Weather, Tray, Clips, Calendar, System, Mirror, and Themes.
+- Local task entry and a 25-minute focus timer.
+- Eleven selectable color themes.
+
+Some sections currently provide their UI shell only. Windows media sessions, calendar, audio devices, location, weather, camera, clipboard history, drag-and-drop tray, prayer calculations, and Quran content are separate integrations and are not represented as completed features yet.
 
 ## Requirements
 
-- Windows 10 or Windows 11
-- .NET 10 SDK with the Windows Desktop workload/reference packs
+- Windows 10/11 x64
+- .NET 10 SDK or newer
+- Windows Desktop targeting pack for the target framework
 
 ## Run
 
-From the repository root:
-
 ```powershell
+dotnet restore .\src\Selah\Selah.csproj
 dotnet run --project .\src\Selah\Selah.csproj
 ```
 
-Or open `Selah.sln` in Visual Studio 2026 (or a compatible Visual Studio version with the .NET 10 SDK).
+## Project structure
 
-## Current foundation
+- `src/Selah/App.xaml`: global theme resources.
+- `src/Selah/MainWindow.xaml`: island layout and feature section views.
+- `src/Selah/MainWindow.xaml.cs`: window transitions, navigation, local task interaction, focus timer, and theme selection.
 
-- Borderless, transparent, always-on-top island window
-- Compact and expanded states
-- Basic expand/collapse animation
-- Top-center positioning within the primary display work area
-- No administrator privileges required
+## Roadmap
 
-## Planned architecture
-
-The initial window is intentionally small. As features grow, code will move into dedicated layers:
-
-- **Views** — WPF windows and reusable controls
-- **ViewModels** — presentation state and commands
-- **Services** — Windows integrations such as media, audio, battery, clipboard, and notifications
-- **Models** — typed data shared between services and view models
-- **Infrastructure** — Win32 interop, settings persistence, and diagnostics
-
-Clipboard monitoring and network-backed features will be opt-in where appropriate.
-
-## License
-
-MIT. See [LICENSE](LICENSE).
+Feature integrations should be added as independent services, not embedded in the window code-behind. The next engineering milestone is the window system (multi-monitor/DPI handling, click-through hit testing, tray lifecycle) followed by media-session integration.
