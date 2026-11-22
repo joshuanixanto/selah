@@ -27,18 +27,12 @@ public partial class MainWindow : Window
         PositionAtTopCenter(CompactWidth);
     }
 
-    private void ExpandButton_Click(object sender, RoutedEventArgs e)
-    {
-        SetExpanded(true);
-    }
+    private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(true);
 
-    private void CollapseButton_Click(object sender, RoutedEventArgs e)
-    {
-        SetExpanded(false);
-    }
+    private void CollapseButton_Click(object sender, RoutedEventArgs e) => SetExpanded(false);
 
     /// <summary>
-    /// Switches the visible content and animates the island to the target size.
+    /// Switches the visible content and animates the island while keeping it centered.
     /// </summary>
     private void SetExpanded(bool expanded)
     {
@@ -49,34 +43,36 @@ public partial class MainWindow : Window
 
         _isExpanded = expanded;
 
-        if (expanded)
-        {
-            CompactContent.Visibility = Visibility.Collapsed;
-            ExpandedContent.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            ExpandedContent.Visibility = Visibility.Collapsed;
-            CompactContent.Visibility = Visibility.Visible;
-        }
+        CompactContent.Visibility = expanded ? Visibility.Collapsed : Visibility.Visible;
+        ExpandedContent.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
 
         var targetWidth = expanded ? ExpandedWidth : CompactWidth;
         var targetHeight = expanded ? ExpandedHeight : CompactHeight;
+        var duration = TimeSpan.FromMilliseconds(TransitionDurationMs);
         var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
+        var workArea = SystemParameters.WorkArea;
+        var targetLeft = workArea.Left + (workArea.Width - targetWidth) / 2;
 
-        PositionAtTopCenter(targetWidth);
+        Top = workArea.Top + TopOffset;
+
+        BeginAnimation(LeftProperty, new DoubleAnimation
+        {
+            To = targetLeft,
+            Duration = duration,
+            EasingFunction = easing
+        });
 
         BeginAnimation(WidthProperty, new DoubleAnimation
         {
             To = targetWidth,
-            Duration = TimeSpan.FromMilliseconds(TransitionDurationMs),
+            Duration = duration,
             EasingFunction = easing
         });
 
         BeginAnimation(HeightProperty, new DoubleAnimation
         {
             To = targetHeight,
-            Duration = TimeSpan.FromMilliseconds(TransitionDurationMs),
+            Duration = duration,
             EasingFunction = easing
         });
     }
