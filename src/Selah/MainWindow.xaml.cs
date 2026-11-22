@@ -13,6 +13,7 @@ public partial class MainWindow : Window
     private const double ExpandedWidth = 440;
     private const double ExpandedHeight = 280;
     private const double TopOffset = 18;
+    private const int TransitionDurationMs = 220;
 
     private bool _isExpanded;
 
@@ -36,6 +37,9 @@ public partial class MainWindow : Window
         SetExpanded(false);
     }
 
+    /// <summary>
+    /// Switches the visible content and animates the island to the target size.
+    /// </summary>
     private void SetExpanded(bool expanded)
     {
         if (_isExpanded == expanded)
@@ -58,19 +62,28 @@ public partial class MainWindow : Window
 
         var targetWidth = expanded ? ExpandedWidth : CompactWidth;
         var targetHeight = expanded ? ExpandedHeight : CompactHeight;
+        var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
 
         PositionAtTopCenter(targetWidth);
 
-        var animation = new DoubleAnimation
+        BeginAnimation(WidthProperty, new DoubleAnimation
+        {
+            To = targetWidth,
+            Duration = TimeSpan.FromMilliseconds(TransitionDurationMs),
+            EasingFunction = easing
+        });
+
+        BeginAnimation(HeightProperty, new DoubleAnimation
         {
             To = targetHeight,
-            Duration = TimeSpan.FromMilliseconds(220),
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
-        };
-
-        BeginAnimation(HeightProperty, animation);
+            Duration = TimeSpan.FromMilliseconds(TransitionDurationMs),
+            EasingFunction = easing
+        });
     }
 
+    /// <summary>
+    /// Places the island horizontally centered at the top of the primary work area.
+    /// </summary>
     private void PositionAtTopCenter(double windowWidth)
     {
         var workArea = SystemParameters.WorkArea;
