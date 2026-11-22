@@ -30,8 +30,11 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        _pages.AddRange([HomePage, MusicPage, TasksPage, FocusPage, PrayerPage, QuranPage,
-            WeatherPage, TrayPage, ClipsPage, CalendarPage, SystemPage, MirrorPage, ThemesPage]);
+        _pages.AddRange(new[]
+        {
+            HomePage, MusicPage, TasksPage, FocusPage, PrayerPage, QuranPage,
+            WeatherPage, TrayPage, ClipsPage, CalendarPage, SystemPage, MirrorPage, ThemesPage
+        });
 
         _clockTimer.Tick += (_, _) => ClockText.Text = DateTime.Now.ToString("ddd, dd MMM  •  HH:mm");
         _focusTimer.Tick += FocusTimer_Tick;
@@ -40,12 +43,6 @@ public partial class MainWindow : Window
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e) => PositionAtTopCenter(CompactWidth);
-
-    private void Window_Deactivated(object? sender, EventArgs e)
-    {
-        if (_isExpanded)
-            SetExpanded(false);
-    }
 
     private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(true);
     private void CollapseButton_Click(object sender, RoutedEventArgs e) => SetExpanded(false);
