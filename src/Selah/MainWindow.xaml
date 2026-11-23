@@ -328,7 +328,7 @@
                                             </StackPanel>
                                         </Border>
                                         <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource Card}" Padding="8" Margin="3,3,0,0">
-                                            <StackPanel VerticalAlignment="Center" Gap="7">
+                                            <StackPanel VerticalAlignment="Center">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="▦" Foreground="{DynamicResource AccentBrush}" FontSize="11"/>
                                                     <TextBlock Text="  Calendar" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="9"/>
