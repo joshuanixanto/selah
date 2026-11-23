@@ -560,9 +560,14 @@ public partial class MainWindow : Window
 
     private static string FormatMediaTime(TimeSpan value)
     {
-        return value.TotalHours >= 1
-            ? value.ToString(@"h\\:mm\\:ss")
-            : value.ToString(@"m\\:ss");
+        var totalSeconds = Math.Max(0, (long)value.TotalSeconds);
+        var hours = totalSeconds / 3600;
+        var minutes = (totalSeconds % 3600) / 60;
+        var seconds = totalSeconds % 60;
+
+        return hours > 0
+            ? $"{hours}:{minutes:00}:{seconds:00}"
+            : $"{totalSeconds / 60}:{seconds:00}";
     }
 
     private async void PlayerSeekBar_Seek(object sender, System.Windows.Input.MouseButtonEventArgs e)
