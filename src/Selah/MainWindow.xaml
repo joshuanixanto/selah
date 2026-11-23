@@ -1,7 +1,7 @@
 <Window x:Class="Selah.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Selah" Width="148" Height="6" MinWidth="148" MaxWidth="760" MinHeight="6" MaxHeight="450"
+        Title="Selah" Width="148" Height="6" MinWidth="148" MaxWidth="760" MinHeight="6" MaxHeight="400"
         WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True"
         Background="Transparent" Topmost="True" ShowInTaskbar="False"
         WindowStartupLocation="Manual" Loaded="Window_Loaded">
@@ -42,16 +42,16 @@
             <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="Margin" Value="1,0"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="MinWidth" Value="30"/>
-            <Setter Property="Height" Value="28"/>
+            <Setter Property="Height" Value="26"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="TabSurface" Background="{TemplateBinding Background}" CornerRadius="14" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="TabSurface" Background="{TemplateBinding Background}" CornerRadius="99" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -183,74 +183,78 @@
                 </Button>
             </Grid>
 
-            <!-- Expanded panel: compact horizontal navigation, like Nusa's desktop panel. -->
-            <Grid x:Name="ExpandedContent" Visibility="Collapsed">
+            <!-- Expanded panel follows Nusa's compact 760px floating panel geometry. -->
+            <Grid x:Name="ExpandedContent" Visibility="Collapsed" Margin="16,10,16,14">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="26"/>
+                    <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-
-                <Border Grid.Row="0" Background="#090A0E" BorderBrush="{DynamicResource IslandBorderBrush}" BorderThickness="0,0,0,1" Padding="10,5">
-                    <DockPanel LastChildFill="True">
-                        <Button DockPanel.Dock="Right" Content="×" Click="CollapseButton_Click"
-                                Background="#20232C" Foreground="{DynamicResource PrimaryTextBrush}"
-                                BorderThickness="0" FontSize="16" Width="27" Height="27"
-                                Cursor="Hand" Margin="8,0,0,0"/>
-                        <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,0">
-                            <TextBlock x:Name="ClockText" Text="14:51" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                            <TextBlock x:Name="DateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource MutedTextBrush}" FontSize="7" HorizontalAlignment="Right"/>
+                <DockPanel Grid.Row="0" LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Style="{StaticResource TopNavButton}" Content="◷  25m" Tag="Focus" ToolTip="Open focus timer" Click="Navigate_Click"/>
+                        <Button Style="{StaticResource TopNavButton}" Content="⚙" Tag="Themes" ToolTip="Appearance and themes" Click="Navigate_Click"/>
+                    </StackPanel>
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+                        <StackPanel x:Name="TopNavigation" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Style="{StaticResource TopNavButton}" Content="⌂" Tag="Home" ToolTip="Overview" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="♫" Tag="Music" ToolTip="Now playing" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="✓" Tag="Tasks" ToolTip="Tasks" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="◷" Tag="Focus" ToolTip="Focus" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="▤" Tag="Bible" ToolTip="Bible" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="☼" Tag="Weather" ToolTip="Weather" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="▣" Tag="Tray" ToolTip="Tray" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="▧" Tag="Clips" ToolTip="Clipboard" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="▦" Tag="Calendar" ToolTip="Calendar" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="⌘" Tag="System" ToolTip="System" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="◉" Tag="Mirror" ToolTip="Mirror" Click="Navigate_Click"/>
                         </StackPanel>
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                            <StackPanel x:Name="TopNavigation" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Style="{StaticResource TopNavButton}" Content="⌂" Tag="Home" ToolTip="Overview" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="♫" Tag="Music" ToolTip="Now playing" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="✓" Tag="Tasks" ToolTip="Tasks" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="◷" Tag="Focus" ToolTip="Focus" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="▤" Tag="Bible" ToolTip="Bible" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="☼" Tag="Weather" ToolTip="Weather" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="▣" Tag="Tray" ToolTip="Tray" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="▧" Tag="Clips" ToolTip="Clipboard" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="▦" Tag="Calendar" ToolTip="Calendar" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="⌘" Tag="System" ToolTip="System" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="◉" Tag="Mirror" ToolTip="Mirror" Click="Navigate_Click"/>
-                                <Button Style="{StaticResource TopNavButton}" Content="⚙" Tag="Themes" ToolTip="Themes" Click="Navigate_Click"/>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
-                </Border>
-
-                <Border Grid.Row="1" Background="#090A0E" Padding="16,12,16,14">
+                    </ScrollViewer>
+                </DockPanel>
+                <Grid Grid.Row="2">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <Grid x:Name="PageHost">
                                 <StackPanel x:Name="HomePage">
-                                    <Grid Height="184">
+                                    <Grid Height="130">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1.25*"/>
+                                            <ColumnDefinition Width="250"/>
                                             <ColumnDefinition Width="1"/>
+                                            <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="1"/>
+                                            <ColumnDefinition Width="168"/>
                                         </Grid.ColumnDefinitions>
-
-                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="2,0,18,0">
-                                            <TextBlock Text="YOUR SPACE" Foreground="{DynamicResource AccentBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,0,10"/>
-                                            <TextBlock Text="A calmer way to work." Foreground="{DynamicResource PrimaryTextBrush}" FontSize="23" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                            <TextBlock Text="Keep your focus, tasks and everyday tools within reach." Style="{StaticResource Muted}" TextWrapping="Wrap"/>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="220">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="74"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                                <Border Width="64" Height="64" CornerRadius="12" Background="#17191F" VerticalAlignment="Center">
+                                                    <TextBlock Text="♫" FontSize="27" Foreground="{DynamicResource MutedTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                                    <TextBlock Text="NOW PLAYING" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,0,5"/>
+                                                    <TextBlock Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="13" FontWeight="SemiBold"/>
+                                                    <TextBlock Text="Start audio on your PC" Style="{StaticResource Muted}" FontSize="10" TextWrapping="Wrap" Margin="0,3,0,0"/>
+                                                </StackPanel>
+                                            </Grid>
                                         </StackPanel>
-
-                                        <Border Grid.Column="1" BorderBrush="{DynamicResource IslandBorderBrush}" BorderThickness="1,0,0,0" Padding="18,8,12,8">
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="FOCUS SESSION" Style="{StaticResource Muted}" FontSize="9" FontWeight="Bold"/>
-                                                <TextBlock Text="25 min" Foreground="{DynamicResource AccentBrush}" FontSize="27" FontWeight="SemiBold" Margin="0,8,0,4"/>
-                                                <TextBlock Text="One thing at a time." Style="{StaticResource Muted}" TextWrapping="Wrap"/>
+                                        <Border Grid.Column="1" Background="{DynamicResource IslandBorderBrush}"/>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="16,0">
+                                            <TextBlock Text="TODAY" Foreground="{DynamicResource AccentBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,0,8"/>
+                                            <TextBlock x:Name="HomeDateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Border Background="#20232C" CornerRadius="9" Padding="9,6" Margin="0,0,7,0">
+                                                    <StackPanel><TextBlock Text="FOCUS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock Text="25 min" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
+                                                </Border>
+                                                <Border Background="#20232C" CornerRadius="9" Padding="9,6">
+                                                    <StackPanel><TextBlock Text="TASKS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
+                                                </Border>
                                             </StackPanel>
-                                        </Border>
-
-                                        <Border Grid.Column="2" BorderBrush="{DynamicResource IslandBorderBrush}" BorderThickness="1,0,0,0" Padding="18,8,4,8">
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="OPEN TASKS" Style="{StaticResource Muted}" FontSize="9" FontWeight="Bold"/>
-                                                <TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="27" FontWeight="SemiBold" Margin="0,8,0,4"/>
-                                                <TextBlock Text="Small steps still count." Style="{StaticResource Muted}" TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </Border>
+                                        </StackPanel>
+                                        <Border Grid.Column="3" Background="{DynamicResource IslandBorderBrush}"/>
+                                        <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBlock Text="QUICK ACCESS" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,0,8"/>
+                                            <Button Style="{StaticResource SecondaryButton}" Content="Tasks  →" Tag="Tasks" Click="Navigate_Click" HorizontalAlignment="Stretch" Margin="0,0,0,5"/>
+                                            <Button Style="{StaticResource SecondaryButton}" Content="Focus  →" Tag="Focus" Click="Navigate_Click" HorizontalAlignment="Stretch"/>
+                                        </StackPanel>
                                     </Grid>
                                 </StackPanel>
 
