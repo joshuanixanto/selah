@@ -158,7 +158,7 @@
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Background="{DynamicResource IslandBackgroundBrush}"
             BorderBrush="{DynamicResource IslandBorderBrush}"
-            BorderThickness="1" CornerRadius="0,0,10,10" Padding="0"
+            BorderThickness="0" CornerRadius="0,0,3,3" Padding="0"
             ClipToBounds="True"
             MouseEnter="IslandSurface_MouseEnter"
             MouseLeave="IslandSurface_MouseLeave">
