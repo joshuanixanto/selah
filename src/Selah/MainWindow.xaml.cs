@@ -104,6 +104,7 @@ public partial class MainWindow : Window
         if (_isExpanded) return;
 
         _isHovered = hovered;
+        IslandSurface.CornerRadius = hovered ? new CornerRadius(0, 0, 9, 9) : new CornerRadius(0, 0, 3, 3);
         CompactContent.Visibility = hovered ? Visibility.Visible : Visibility.Collapsed;
         ExpandedContent.Visibility = Visibility.Collapsed;
 
@@ -119,6 +120,7 @@ public partial class MainWindow : Window
         _isExpanded = expanded;
         if (expanded)
         {
+            IslandSurface.CornerRadius = new CornerRadius(0, 0, 26, 26);
             CompactContent.Visibility = Visibility.Collapsed;
             ExpandedContent.Visibility = Visibility.Visible;
             UpdateClockDisplay();
