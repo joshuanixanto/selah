@@ -36,6 +36,7 @@ public partial class MainWindow : Window
     private readonly MediaPlayerService _mediaPlayer = new();
     private readonly List<FrameworkElement> _pages = [];
     private readonly ObservableCollection<TaskItem> _tasks = [];
+    private readonly ObservableCollection<DateTime> _weekDates = [];
     private bool _isExpanded;
     private bool _isHovered;
     private bool _isTransitioning;
@@ -59,6 +60,7 @@ public partial class MainWindow : Window
         _pages.Add(ThemesPage);
         TaskList.ItemsSource = _tasks;
         DashboardTaskList.ItemsSource = _tasks;
+        HomeWeekStrip.ItemsSource = _weekDates;
         _tasks.CollectionChanged += Tasks_CollectionChanged;
 
         _clockTimer.Tick += (_, _) => UpdateClockDisplay();
@@ -150,6 +152,10 @@ public partial class MainWindow : Window
         var now = DateTime.Now;
         CompactClockText.Text = now.ToString("HH:mm");
         HomeDateText.Text = now.ToString("MMMM yyyy").ToUpperInvariant();
+        var monday = now.Date.AddDays(-(((int)now.DayOfWeek + 6) % 7));
+        _weekDates.Clear();
+        for (var day = 0; day < 7; day++)
+            _weekDates.Add(monday.AddDays(day));
     }
 
     /// <summary>
