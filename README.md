@@ -8,13 +8,13 @@ Selah takes interaction and feature inspiration from [Nusa](https://github.com/H
 
 - Borderless, transparent, always-on-top island window.
 - Compact and expanded states with spring-style resize/position transitions.
-- Section navigation for Home, Music, Tasks, Focus, Prayer, Quran, Weather, Tray, Clips, Calendar, System, Mirror, and Themes.
+- Section navigation for Home, Music, Tasks, Focus, Bible, Weather, Tray, Clips, Calendar, System, Mirror, and Themes.
 - Local task entry and a 25-minute focus timer.
 - Twenty visual theme presets across premium, minimal, cyber/neon, and ambient styles.
 - Custom semantic color palette editor with live preview and local JSON persistence.
 - Theme presets and custom palettes use shared WPF resource tokens for consistent application-wide updates.
 
-Some sections currently provide their UI shell only. Windows media sessions, calendar, audio devices, location, weather, camera, clipboard history, drag-and-drop tray, prayer calculations, and Quran content are separate integrations and are not represented as completed features yet.
+Some sections currently provide their UI shell only. The Bible reader currently includes TB/NIV selection, book selection, chapter input, and search/reading placeholders. Bible text is not bundled; an authorized text provider must be connected before reading, search, bookmarks, or verse-based features can work. `IBibleProvider` defines the integration boundary, while `BibleModels.cs` contains translation and passage models. TB (LAI) and NIV (Biblica) remain subject to their respective licensing terms. Windows media sessions, calendar, audio devices, location, weather, camera, clipboard history, and drag-and-drop tray are also separate integrations and are not represented as completed features yet.
 
 ## Requirements
 
@@ -34,6 +34,8 @@ dotnet run --project .\src\Selah\Selah.csproj
 - `src/Selah/App.xaml`: shared semantic theme resource tokens.
 - `src/Selah/Models/ThemePalette.cs`: strongly typed theme palette model.
 - `src/Selah/Services/ThemeService.cs`: preset lookup, resource updates, validation, and custom palette persistence.
+- `src/Selah/Models/BibleModels.cs`: Bible translation, book, chapter reference, and verse models.
+- `src/Selah/Services/IBibleProvider.cs`: provider contract for authorized Bible text sources.
 - `src/Selah/MainWindow.xaml`: island layout, feature views, and theme customizer UI.
 - `src/Selah/MainWindow.xaml.cs`: window transitions, navigation, local task interaction, focus timer, and theme UI event handlers.
 
