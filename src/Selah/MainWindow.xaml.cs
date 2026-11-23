@@ -79,6 +79,15 @@ public partial class MainWindow : Window
             SetCompactState(false);
     }
 
+    private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key != System.Windows.Input.Key.Escape || !_isExpanded)
+            return;
+
+        SetExpanded(false);
+        e.Handled = true;
+    }
+
     private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(true);
 
     private void CollapseButton_Click(object sender, RoutedEventArgs e)
