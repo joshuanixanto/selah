@@ -217,7 +217,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0" LastChildFill="True">
-                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Gap="5">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="◖" Foreground="#8E8E93" FontSize="12" VerticalAlignment="Center"/>
                         <Slider x:Name="QuickVolumeSlider" Width="58" Minimum="0" Maximum="100" Value="50" IsEnabled="False" Height="16" VerticalAlignment="Center" ToolTip="System volume integration not connected"/>
                         <Border Width="1" Height="17" Background="#1AFFFFFF" Margin="5,0"/>
@@ -251,7 +251,7 @@
 <Grid.ColumnDefinitions><ColumnDefinition Width="1.12*"/><ColumnDefinition Width="1.25*"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
 <Grid Grid.Column="0" Margin="0,0,16,0">
 <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-<TextBlock Text="NOW PLAYING" Foreground="#34D399" FontSize="8" FontWeight="SemiBold" LetterSpacing="1"/>
+<TextBlock Text="NOW PLAYING" Foreground="#34D399" FontSize="8" FontWeight="SemiBold"/>
 <Grid Grid.Row="1" Margin="0,10,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="68"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
 <Border Width="60" Height="60" CornerRadius="16" Background="#18181B" ClipToBounds="True" VerticalAlignment="Top">
 <Grid><TextBlock Text="♫" Foreground="#8E8E93" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/><Image x:Name="DashboardArtworkImage" Stretch="UniformToFill" Visibility="Collapsed"/></Grid>
