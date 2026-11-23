@@ -94,7 +94,12 @@ public partial class MainWindow : Window
 
     private void IslandSurface_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        if (!_isExpanded) return;
+        if (!_isExpanded)
+        {
+            SetExpanded(true);
+            e.Handled = true;
+            return;
+        }
 
         DependencyObject? current = e.OriginalSource as DependencyObject;
         while (current is not null && !ReferenceEquals(current, IslandSurface))
