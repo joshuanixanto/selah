@@ -18,10 +18,10 @@ public partial class MainWindow : Window
     private const double IdleHeight = 6;
     private const double HoverWidth = 190;
     private const double HoverHeight = 30;
-    private const double ExpandedWidth = 620;
-    private const double ExpandedHeight = 590;
+    private const double ExpandedWidth = 760;
+    private const double ExpandedHeight = 300;
     private const double TopOffset = 0;
-    private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(420);
+    private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(360);
 
     private readonly ThemeService _themeService = new();
     private readonly DispatcherTimer _clockTimer = new() { Interval = TimeSpan.FromSeconds(1) };
@@ -121,7 +121,7 @@ public partial class MainWindow : Window
             CompactContent.Visibility = Visibility.Collapsed;
             ExpandedContent.Visibility = Visibility.Visible;
             UpdateClockDisplay();
-            AnimateWindowBounds(ExpandedWidth, ExpandedHeight);
+            AnimateWindowBounds(ExpandedWidth, GetExpandedHeightForCurrentPage());
             return;
         }
 
@@ -159,8 +159,9 @@ public partial class MainWindow : Window
         }
 
         _isTransitioning = true;
-        var duration = new Duration(TimeSpan.FromMilliseconds(260));
-        var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
+        var duration = new Duration(TransitionDuration);
+        // BackEase gives the panel a restrained spring-like settle similar to Nusa's CSS spring curve.
+        var easing = new BackEase { Amplitude = 0.12, EasingMode = EasingMode.EaseOut };
 
         var widthAnimation = new DoubleAnimation(Width, targetWidth, duration) { EasingFunction = easing };
         var heightAnimation = new DoubleAnimation(Height, targetHeight, duration) { EasingFunction = easing };
@@ -182,6 +183,30 @@ public partial class MainWindow : Window
         BeginAnimation(LeftProperty, leftAnimation);
     }
 
+    private double GetExpandedHeightForCurrentPage()
+    {
+        var currentPage = _pages.FirstOrDefault(page => page.Visibility == Visibility.Visible);
+        var pageName = currentPage?.Name?.Replace("Page", string.Empty, StringComparison.Ordinal) ?? "Home";
+        return GetExpandedHeight(pageName);
+    }
+
+    private static double GetExpandedHeight(string pageName) => pageName switch
+    {
+        "Home" => 290,
+        "Music" => 330,
+        "Tasks" => 350,
+        "Focus" => 330,
+        "Bible" => 450,
+        "Themes" => 450,
+        "Weather" => 270,
+        "Tray" => 270,
+        "Clips" => 270,
+        "Calendar" => 290,
+        "System" => 290,
+        "Mirror" => 300,
+        _ => ExpandedHeight
+    };
+
     private static double GetCenteredLeft(double windowWidth)
     {
         var area = SystemParameters.WorkArea;
@@ -202,6 +227,9 @@ public partial class MainWindow : Window
 
         foreach (var item in _pages)
             item.Visibility = ReferenceEquals(item, page) ? Visibility.Visible : Visibility.Collapsed;
+
+        if (_isExpanded)
+            AnimateWindowBounds(ExpandedWidth, GetExpandedHeight(pageName));
     }
 
     private void AddTask_Click(object sender, RoutedEventArgs e)
