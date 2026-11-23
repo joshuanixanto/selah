@@ -14,8 +14,10 @@ namespace Selah;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private const double CompactWidth = 148;
-    private const double CompactHeight = 12;
+    private const double IdleWidth = 148;
+    private const double IdleHeight = 6;
+    private const double HoverWidth = 190;
+    private const double HoverHeight = 30;
     private const double ExpandedWidth = 620;
     private const double ExpandedHeight = 590;
     private const double TopOffset = 0;
@@ -26,6 +28,8 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _focusTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly List<StackPanel> _pages = [];
     private bool _isExpanded;
+    private bool _isHovered;
+    private bool _isTransitioning;
     private bool _focusRunning;
     private int _focusRemainingSeconds = 25 * 60;
     private int _taskCount;
@@ -50,104 +54,111 @@ public partial class MainWindow : Window
         PopulatePaletteInputs(initialPalette);
     }
 
-    private bool _isTransitioning;
-    private bool? _pendingExpandedState;
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        Width = CompactWidth;
-        Height = CompactHeight;
+        Width = IdleWidth;
+        Height = IdleHeight;
         IslandSurface.Width = double.NaN;
         IslandSurface.Height = double.NaN;
         PositionAtTopCenter();
         UpdateClockDisplay();
+        SetCompactState(false, animate: false);
     }
 
     private void IslandSurface_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        => SetExpanded(true);
+    {
+        if (!_isExpanded)
+            SetCompactState(true);
+    }
 
     private void IslandSurface_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        => SetExpanded(false);
+    {
+        if (!_isExpanded)
+            SetCompactState(false);
+    }
 
     private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(true);
-    private void CollapseButton_Click(object sender, RoutedEventArgs e) => SetExpanded(false);
+
+    private void CollapseButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetExpanded(false);
+        SetCompactState(IslandSurface.IsMouseOver);
+    }
 
     private void UpdateClockDisplay()
     {
         var now = DateTime.Now;
         ClockText.Text = now.ToString("HH:mm");
+        CompactClockText.Text = now.ToString("HH:mm");
         DateText.Text = now.ToString("dddd, dd MMMM").ToUpperInvariant();
+    }
+
+    /// <summary>
+    /// Controls the two compact states: a 6px idle notch and a small hover pill.
+    /// The expanded dashboard is deliberately opened only by clicking the pill.
+    /// </summary>
+    private void SetCompactState(bool hovered, bool animate = true)
+    {
+        if (_isExpanded) return;
+
+        _isHovered = hovered;
+        CompactContent.Visibility = hovered ? Visibility.Visible : Visibility.Collapsed;
+        ExpandedContent.Visibility = Visibility.Collapsed;
+
+        var width = hovered ? HoverWidth : IdleWidth;
+        var height = hovered ? HoverHeight : IdleHeight;
+        AnimateWindowBounds(width, height, animate);
     }
 
     private void SetExpanded(bool expanded)
     {
-        if (_isTransitioning)
-        {
-            // Preserve the latest hover state if the pointer moves during an animation.
-            _pendingExpandedState = expanded;
-            return;
-        }
-
         if (_isExpanded == expanded) return;
 
         _isExpanded = expanded;
-        _isTransitioning = true;
-
         if (expanded)
         {
-            ExpandedContent.Visibility = Visibility.Visible;
             CompactContent.Visibility = Visibility.Collapsed;
+            ExpandedContent.Visibility = Visibility.Visible;
             UpdateClockDisplay();
-        }
-        else
-        {
-            // Swap to the compact layout before shrinking so text stays crisp throughout the transition.
-            CompactContent.Visibility = Visibility.Visible;
-            ExpandedContent.Visibility = Visibility.Collapsed;
+            AnimateWindowBounds(ExpandedWidth, ExpandedHeight);
+            return;
         }
 
-        var targetWidth = expanded ? ExpandedWidth : CompactWidth;
-        var targetHeight = expanded ? ExpandedHeight : CompactHeight;
+        ExpandedContent.Visibility = Visibility.Collapsed;
+        SetCompactState(IslandSurface.IsMouseOver);
+    }
+
+    private void AnimateWindowBounds(double targetWidth, double targetHeight, bool animate = true)
+    {
         var targetLeft = GetCenteredLeft(targetWidth);
-        var duration = new Duration(TransitionDuration);
+        if (!animate)
+        {
+            BeginAnimation(WidthProperty, null);
+            BeginAnimation(HeightProperty, null);
+            BeginAnimation(LeftProperty, null);
+            Width = targetWidth;
+            Height = targetHeight;
+            Left = targetLeft;
+            return;
+        }
+
+        if (_isTransitioning)
+        {
+            BeginAnimation(WidthProperty, null);
+            BeginAnimation(HeightProperty, null);
+            BeginAnimation(LeftProperty, null);
+        }
+
+        _isTransitioning = true;
+        var duration = new Duration(TimeSpan.FromMilliseconds(260));
         var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
 
-        var widthAnimation = new DoubleAnimation(Width, targetWidth, duration)
-        {
-            EasingFunction = easing,
-            FillBehavior = FillBehavior.HoldEnd
-        };
+        var widthAnimation = new DoubleAnimation(Width, targetWidth, duration) { EasingFunction = easing };
+        var heightAnimation = new DoubleAnimation(Height, targetHeight, duration) { EasingFunction = easing };
+        var leftAnimation = new DoubleAnimation(Left, targetLeft, duration) { EasingFunction = easing };
 
-        var heightAnimation = new DoubleAnimation(Height, targetHeight, duration)
-        {
-            EasingFunction = easing,
-            FillBehavior = FillBehavior.HoldEnd
-        };
-
-        var leftAnimation = new DoubleAnimation(Left, targetLeft, duration)
-        {
-            EasingFunction = easing,
-            FillBehavior = FillBehavior.HoldEnd
-        };
-
-        heightAnimation.Completed += (_, _) =>
-        {
-            _isTransitioning = false;
-
-            if (!expanded)
-            {
-                CompactContent.Visibility = Visibility.Visible;
-                ExpandedContent.Visibility = Visibility.Collapsed;
-            }
-
-            if (_pendingExpandedState is bool pendingState)
-            {
-                _pendingExpandedState = null;
-                if (pendingState != _isExpanded)
-                    SetExpanded(pendingState);
-            }
-        };
-
+        heightAnimation.Completed += (_, _) => _isTransitioning = false;
         BeginAnimation(WidthProperty, widthAnimation);
         BeginAnimation(HeightProperty, heightAnimation);
         BeginAnimation(LeftProperty, leftAnimation);
