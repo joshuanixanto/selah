@@ -77,6 +77,12 @@ public partial class MainWindow : Window
             CompactContent.Visibility = Visibility.Collapsed;
             ClockText.Text = DateTime.Now.ToString("ddd, dd MMM  •  HH:mm");
         }
+        else
+        {
+            // Swap to the compact layout before shrinking so text stays crisp throughout the transition.
+            CompactContent.Visibility = Visibility.Visible;
+            ExpandedContent.Visibility = Visibility.Collapsed;
+        }
 
         var targetWidth = expanded ? ExpandedWidth : CompactWidth;
         var targetHeight = expanded ? ExpandedHeight : CompactHeight;
