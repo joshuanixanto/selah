@@ -539,8 +539,13 @@ public partial class MainWindow : Window
                 PlayerSeekBar.Minimum = minimum;
                 PlayerSeekBar.Maximum = Math.Max(minimum + 0.1, maximum);
                 PlayerSeekBar.IsEnabled = maximum > minimum;
+                DashboardSeekBar.Minimum = minimum;
+                DashboardSeekBar.Maximum = Math.Max(minimum + 0.1, maximum);
+                DashboardSeekBar.IsEnabled = maximum > minimum;
                 if (!PlayerSeekBar.IsMouseCaptureWithin)
                     PlayerSeekBar.Value = Math.Clamp(media.Position.TotalSeconds, minimum, maximum);
+                if (!DashboardSeekBar.IsMouseCaptureWithin)
+                    DashboardSeekBar.Value = Math.Clamp(media.Position.TotalSeconds, minimum, maximum);
 
                 PlayerPositionText.Text = FormatMediaTime(media.Position);
                 PlayerDurationText.Text = FormatMediaTime(media.Duration);
@@ -551,6 +556,10 @@ public partial class MainWindow : Window
                 PlayerSeekBar.Maximum = 100;
                 PlayerSeekBar.Value = 0;
                 PlayerSeekBar.IsEnabled = false;
+                DashboardSeekBar.Minimum = 0;
+                DashboardSeekBar.Maximum = 100;
+                DashboardSeekBar.Value = 0;
+                DashboardSeekBar.IsEnabled = false;
                 PlayerPositionText.Text = "0:00";
                 PlayerDurationText.Text = "0:00";
             }
@@ -597,20 +606,25 @@ public partial class MainWindow : Window
 
     private async void PlayerSeekBar_Seek(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        await SeekToSelectedPositionAsync();
+        await SeekToSelectedPositionAsync(PlayerSeekBar);
     }
 
     private async void PlayerSeekBar_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
     {
-        await SeekToSelectedPositionAsync();
+        await SeekToSelectedPositionAsync(PlayerSeekBar);
     }
 
-    private async Task SeekToSelectedPositionAsync()
+    private async void DashboardSeekBar_Seek(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        if (!PlayerSeekBar.IsEnabled)
+        await SeekToSelectedPositionAsync(DashboardSeekBar);
+    }
+
+    private async Task SeekToSelectedPositionAsync(Slider seekBar)
+    {
+        if (!seekBar.IsEnabled)
             return;
 
-        await _mediaPlayer.SeekAsync(TimeSpan.FromSeconds(PlayerSeekBar.Value));
+        await _mediaPlayer.SeekAsync(TimeSpan.FromSeconds(seekBar.Value));
         await RefreshMediaAsync();
     }
 
