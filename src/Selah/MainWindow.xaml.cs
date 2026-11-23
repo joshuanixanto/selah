@@ -19,7 +19,7 @@ public partial class MainWindow : Window
     private const double HoverWidth = 190;
     private const double HoverHeight = 30;
     private const double ExpandedWidth = 760;
-    private const double ExpandedHeight = 300;
+    private const double ExpandedHeight = 190;
     private const double TopOffset = 0;
     private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(360);
 
@@ -90,9 +90,8 @@ public partial class MainWindow : Window
     private void UpdateClockDisplay()
     {
         var now = DateTime.Now;
-        ClockText.Text = now.ToString("HH:mm");
         CompactClockText.Text = now.ToString("HH:mm");
-        DateText.Text = now.ToString("dddd, dd MMMM").ToUpperInvariant();
+        HomeDateText.Text = now.ToString("dddd, dd MMMM").ToUpperInvariant();
     }
 
     /// <summary>
@@ -195,18 +194,18 @@ public partial class MainWindow : Window
 
     private static double GetExpandedHeight(string pageName) => pageName switch
     {
-        "Home" => 250,
+        "Home" => 190,
         "Music" => 330,
-        "Tasks" => 350,
-        "Focus" => 330,
-        "Bible" => 450,
-        "Themes" => 450,
-        "Weather" => 270,
-        "Tray" => 270,
-        "Clips" => 270,
-        "Calendar" => 290,
-        "System" => 290,
-        "Mirror" => 300,
+        "Tasks" => 330,
+        "Focus" => 250,
+        "Bible" => 400,
+        "Themes" => 400,
+        "Weather" => 190,
+        "Tray" => 190,
+        "Clips" => 190,
+        "Calendar" => 190,
+        "System" => 190,
+        "Mirror" => 190,
         _ => ExpandedHeight
     };
 
