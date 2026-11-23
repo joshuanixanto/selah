@@ -14,11 +14,11 @@ namespace Selah;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private const double CompactWidth = 360;
-    private const double CompactHeight = 64;
+    private const double CompactWidth = 176;
+    private const double CompactHeight = 38;
     private const double ExpandedWidth = 620;
     private const double ExpandedHeight = 590;
-    private const double TopOffset = 12;
+    private const double TopOffset = 0;
     private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(420);
 
     private readonly ThemeService _themeService = new();
@@ -54,10 +54,10 @@ public partial class MainWindow : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        // Keep the native window at its expanded size. Only the visual surface is scaled,
-        // allowing WPF's compositor to animate transforms instead of resizing the HWND.
-        IslandScaleTransform.ScaleX = CompactWidth / ExpandedWidth;
-        IslandScaleTransform.ScaleY = CompactHeight / ExpandedHeight;
+        // Keep the native overlay window fixed; animate only the visible island surface.
+        // Width/Height animation preserves the compact pill's typography instead of scaling it down.
+        IslandSurface.Width = CompactWidth;
+        IslandSurface.Height = CompactHeight;
         PositionAtTopCenter();
     }
 
@@ -78,26 +78,24 @@ public partial class MainWindow : Window
             ClockText.Text = DateTime.Now.ToString("ddd, dd MMM  •  HH:mm");
         }
 
-        var targetScaleX = expanded ? 1.0 : CompactWidth / ExpandedWidth;
-        var targetScaleY = expanded ? 1.0 : CompactHeight / ExpandedHeight;
+        var targetWidth = expanded ? ExpandedWidth : CompactWidth;
+        var targetHeight = expanded ? ExpandedHeight : CompactHeight;
         var duration = new Duration(TransitionDuration);
         var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
 
-        var scaleXAnimation = new DoubleAnimation(
-            IslandScaleTransform.ScaleX, targetScaleX, duration)
+        var widthAnimation = new DoubleAnimation(IslandSurface.Width, targetWidth, duration)
         {
             EasingFunction = easing,
             FillBehavior = FillBehavior.HoldEnd
         };
 
-        var scaleYAnimation = new DoubleAnimation(
-            IslandScaleTransform.ScaleY, targetScaleY, duration)
+        var heightAnimation = new DoubleAnimation(IslandSurface.Height, targetHeight, duration)
         {
             EasingFunction = easing,
             FillBehavior = FillBehavior.HoldEnd
         };
 
-        scaleYAnimation.Completed += (_, _) =>
+        heightAnimation.Completed += (_, _) =>
         {
             _isTransitioning = false;
 
@@ -108,8 +106,8 @@ public partial class MainWindow : Window
             }
         };
 
-        IslandScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleXAnimation);
-        IslandScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleYAnimation);
+        IslandSurface.BeginAnimation(FrameworkElement.WidthProperty, widthAnimation);
+        IslandSurface.BeginAnimation(FrameworkElement.HeightProperty, heightAnimation);
     }
 
     private void PositionAtTopCenter()
