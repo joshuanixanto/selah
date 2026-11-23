@@ -20,7 +20,7 @@ public sealed class ThemeService
     private readonly IReadOnlyDictionary<string, ThemePalette> _presets =
         new Dictionary<string, ThemePalette>(StringComparer.OrdinalIgnoreCase)
         {
-            ["Obsidian"] = Palette("Obsidian", "#101116", "#1B1D27", "#72E4FF", "#A78BFA", "#F4F6FC", "#9BA3B7", "#343746"),
+            ["Obsidian"] = Palette("Obsidian", "#000000", "#18181B", "#34D399", "#60A5FA", "#FFFFFF", "#8E8E93", "#1AFFFFFF"),
             ["Midnight"] = Palette("Midnight", "#10131F", "#1B2133", "#8EA7FF", "#AAB4CE", "#F2F4FF", "#AAB4CE", "#343D58"),
             ["Tokyo Night"] = Palette("Tokyo Night", "#16161E", "#24283B", "#7AA2F7", "#BB9AF7", "#C0CAF5", "#A9B1D6", "#343B59"),
             ["Nord"] = Palette("Nord", "#2E3440", "#3B4252", "#88C0D0", "#81A1C1", "#ECEFF4", "#D8DEE9", "#4C566A"),
