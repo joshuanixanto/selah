@@ -35,7 +35,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         _pages.AddRange(new[]
         {
-            HomePage, MusicPage, TasksPage, FocusPage, PrayerPage, QuranPage,
+            HomePage, MusicPage, TasksPage, FocusPage, BiblePage,
             WeatherPage, TrayPage, ClipsPage, CalendarPage, SystemPage, MirrorPage, ThemesPage
         });
 
