@@ -63,6 +63,7 @@ public partial class MainWindow : Window
         IslandSurface.Height = double.NaN;
         PositionAtTopCenter();
         UpdateClockDisplay();
+        SetActiveNavigation("Home");
         SetCompactState(false, animate: false);
     }
 
@@ -228,8 +229,22 @@ public partial class MainWindow : Window
         foreach (var item in _pages)
             item.Visibility = ReferenceEquals(item, page) ? Visibility.Visible : Visibility.Collapsed;
 
+        SetActiveNavigation(pageName);
         if (_isExpanded)
             AnimateWindowBounds(ExpandedWidth, GetExpandedHeight(pageName));
+    }
+
+    private void SetActiveNavigation(string pageName)
+    {
+        foreach (var button in TopNavigation.Children.OfType<Button>())
+        {
+            var isActive = string.Equals(button.Tag?.ToString(), pageName, StringComparison.Ordinal);
+            button.Background = isActive
+                ? new SolidColorBrush(Color.FromArgb(36, 255, 255, 255))
+                : Brushes.Transparent;
+            button.Foreground = (Brush)(TryFindResource(isActive ? "PrimaryTextBrush" : "MutedTextBrush")
+                ?? (isActive ? Brushes.White : Brushes.Gray));
+        }
     }
 
     private void AddTask_Click(object sender, RoutedEventArgs e)
