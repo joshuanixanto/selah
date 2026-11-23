@@ -244,7 +244,7 @@ public partial class MainWindow : Window
 
     private static double GetExpandedHeight(string pageName) => pageName switch
     {
-        "Home" => 148,
+        "Home" => 160,
         "Music" => 220,
         "Tasks" => 270,
         "Focus" => 210,
