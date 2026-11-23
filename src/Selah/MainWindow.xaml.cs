@@ -50,20 +50,26 @@ public partial class MainWindow : Window
         PopulatePaletteInputs(initialPalette);
     }
 
-    private void Window_Loaded(object sender, RoutedEventArgs e) => PositionAtTopCenter(CompactWidth);
+    private bool _isTransitioning;
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        // Keep the native window at its expanded size. Only the visual surface is scaled,
+        // allowing WPF's compositor to animate transforms instead of resizing the HWND.
+        IslandScaleTransform.ScaleX = CompactWidth / ExpandedWidth;
+        IslandScaleTransform.ScaleY = CompactHeight / ExpandedHeight;
+        PositionAtTopCenter();
+    }
 
     private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(true);
     private void CollapseButton_Click(object sender, RoutedEventArgs e) => SetExpanded(false);
 
     private void SetExpanded(bool expanded)
     {
-        if (_isExpanded == expanded) return;
+        if (_isExpanded == expanded || _isTransitioning) return;
 
         _isExpanded = expanded;
-        var targetWidth = expanded ? ExpandedWidth : CompactWidth;
-        var targetHeight = expanded ? ExpandedHeight : CompactHeight;
-        var workArea = SystemParameters.WorkArea;
-        var targetLeft = workArea.Left + (workArea.Width - targetWidth) / 2;
+        _isTransitioning = true;
 
         if (expanded)
         {
@@ -72,30 +78,44 @@ public partial class MainWindow : Window
             ClockText.Text = DateTime.Now.ToString("ddd, dd MMM  •  HH:mm");
         }
 
-        var animation = new Duration(TransitionDuration);
-        var easing = new BackEase { EasingMode = EasingMode.EaseOut, Amplitude = 0.18 };
+        var targetScaleX = expanded ? 1.0 : CompactWidth / ExpandedWidth;
+        var targetScaleY = expanded ? 1.0 : CompactHeight / ExpandedHeight;
+        var duration = new Duration(TransitionDuration);
+        var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
 
-        BeginAnimation(LeftProperty, new DoubleAnimation(Left, targetLeft, animation) { EasingFunction = easing });
-        BeginAnimation(WidthProperty, new DoubleAnimation(ActualWidth, targetWidth, animation) { EasingFunction = easing });
-        BeginAnimation(HeightProperty, new DoubleAnimation(ActualHeight, targetHeight, animation) { EasingFunction = easing });
-
-        if (!expanded)
+        var scaleXAnimation = new DoubleAnimation(
+            IslandScaleTransform.ScaleX, targetScaleX, duration)
         {
-            var collapseTimer = new DispatcherTimer { Interval = TransitionDuration };
-            collapseTimer.Tick += (_, _) =>
+            EasingFunction = easing,
+            FillBehavior = FillBehavior.HoldEnd
+        };
+
+        var scaleYAnimation = new DoubleAnimation(
+            IslandScaleTransform.ScaleY, targetScaleY, duration)
+        {
+            EasingFunction = easing,
+            FillBehavior = FillBehavior.HoldEnd
+        };
+
+        scaleYAnimation.Completed += (_, _) =>
+        {
+            _isTransitioning = false;
+
+            if (!expanded)
             {
-                collapseTimer.Stop();
                 CompactContent.Visibility = Visibility.Visible;
                 ExpandedContent.Visibility = Visibility.Collapsed;
-            };
-            collapseTimer.Start();
-        }
+            }
+        };
+
+        IslandScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleXAnimation);
+        IslandScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleYAnimation);
     }
 
-    private void PositionAtTopCenter(double width)
+    private void PositionAtTopCenter()
     {
         var area = SystemParameters.WorkArea;
-        Left = area.Left + (area.Width - width) / 2;
+        Left = area.Left + (area.Width - ExpandedWidth) / 2;
         Top = area.Top + TopOffset;
     }
 
