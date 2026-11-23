@@ -24,7 +24,7 @@ public partial class MainWindow : Window
     private const double IdleHeight = 5;
     private const double HoverWidth = 126;
     private const double HoverHeight = 26;
-    private const double ExpandedWidth = 620;
+    private const double ExpandedWidth = 800;
     private const double ExpandedHeight = 190;
     private const double TopOffset = 0;
     private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(360);
@@ -149,7 +149,7 @@ public partial class MainWindow : Window
     {
         var now = DateTime.Now;
         CompactClockText.Text = now.ToString("HH:mm");
-        HomeDateText.Text = now.ToString("dddd, dd MMMM").ToUpperInvariant();
+        HomeDateText.Text = now.ToString("MMMM yyyy").ToUpperInvariant();
     }
 
     /// <summary>
@@ -252,9 +252,9 @@ public partial class MainWindow : Window
 
     private static double GetExpandedHeight(string pageName) => pageName switch
     {
-        "Home" => 220,
-        "Music" => 220,
-        "Tasks" => 270,
+        "Home" => 270,
+        "Music" => 205,
+        "Tasks" => 285,
         "Focus" => 210,
         "Bible" => 330,
         "Themes" => 350,
@@ -300,6 +300,8 @@ public partial class MainWindow : Window
             ["Home"] = ("⌂", "Home"),
             ["Music"] = ("♫", "Music"),
             ["Tasks"] = ("✓", "Tasks"),
+            ["Music"] = ("♫", "Music"),
+            ["Tasks"] = ("✓", "Tasks"),
             ["Focus"] = ("◷", "Focus"),
             ["Bible"] = ("▤", "Bible"),
             ["Weather"] = ("☼", "Weather"),
@@ -316,7 +318,8 @@ public partial class MainWindow : Window
             var key = button.Tag?.ToString() ?? string.Empty;
             var isActive = string.Equals(key, pageName, StringComparison.Ordinal);
             if (tabs.TryGetValue(key, out var tab))
-                button.Content = tab.Icon;
+                button.Content = isActive ? $"{tab.Icon}  {tab.Label}" : tab.Icon;
+            button.Padding = isActive ? new Thickness(11, 5, 11, 5) : new Thickness(8, 5, 8, 5);
 
             button.Background = isActive
                 ? (Brush)(TryFindResource("CardBackgroundBrush") ?? Brushes.Transparent)
@@ -324,6 +327,39 @@ public partial class MainWindow : Window
             button.Foreground = (Brush)(TryFindResource(isActive ? "PrimaryTextBrush" : "MutedTextBrush")
                 ?? Brushes.Gray);
         }
+    }
+
+    private void QuickTimer_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: string minutesText } ||
+            !int.TryParse(minutesText, out var minutes))
+            return;
+
+        _focusRemainingSeconds = minutes * 60;
+        _focusRunning = true;
+        _focusTimer.Start();
+        UpdateFocusDisplay();
+        FocusStatusText.Text = $"{minutes}-minute focus session in progress.";
+        DashboardFocusTimeText.ToolTip = "Focus session running";
+    }
+
+    private void TaskSchedule_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: string schedule })
+            return;
+
+        var due = schedule switch
+        {
+            "30" => DateTime.Now.AddMinutes(30),
+            "60" => DateTime.Now.AddHours(1),
+            "Tonight" => DateTime.Today.AddHours(20) <= DateTime.Now
+                ? DateTime.Today.AddDays(1).AddHours(20)
+                : DateTime.Today.AddHours(20),
+            "Tomorrow" => DateTime.Today.AddDays(1).AddHours(9),
+            _ => DateTime.Now
+        };
+
+        TaskInput.ToolTip = $"Next task due: {due:ddd, HH:mm}";
     }
 
     private void AddTask_Click(object sender, RoutedEventArgs e)
