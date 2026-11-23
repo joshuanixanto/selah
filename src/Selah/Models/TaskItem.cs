@@ -6,13 +6,26 @@ namespace Selah.Models;
 public sealed class TaskItem : INotifyPropertyChanged
 {
     private bool _isCompleted;
+    private DateTime? _dueAt;
 
-    public TaskItem(string title)
+    public TaskItem(string title, DateTime? dueAt = null)
     {
         Title = title;
+        _dueAt = dueAt;
     }
 
     public string Title { get; }
+
+    public DateTime? DueAt
+    {
+        get => _dueAt;
+        set
+        {
+            if (_dueAt == value) return;
+            _dueAt = value;
+            OnPropertyChanged();
+        }
+    }
 
     public bool IsCompleted
     {
