@@ -38,6 +38,36 @@
             </Setter>
         </Style>
 
+        <Style x:Key="TopNavButton" TargetType="Button">
+            <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="1,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="MinWidth" Value="30"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="TabSurface" Background="{TemplateBinding Background}" CornerRadius="14" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabSurface" Property="Background" Value="#252A33"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="TabSurface" Property="Background" Value="#343B47"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Foreground" Value="#081218"/>
             <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
@@ -78,9 +108,9 @@
             <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource IslandBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="15"/>
-            <Setter Property="Padding" Value="16"/>
-            <Setter Property="Margin" Value="0,0,0,11"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="11"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
         <Style x:Key="Muted" TargetType="TextBlock">
@@ -95,7 +125,7 @@
         </Style>
 
         <Style x:Key="PageTitle" TargetType="TextBlock" BasedOn="{StaticResource Heading}">
-            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="Margin" Value="0,0,0,4"/>
         </Style>
 
@@ -153,72 +183,45 @@
                 </Button>
             </Grid>
 
-            <!-- Expanded dashboard -->
-            <Grid x:Name="ExpandedContent" Margin="16,13" Visibility="Collapsed">
+            <!-- Expanded panel: compact horizontal navigation, like Nusa's desktop panel. -->
+            <Grid x:Name="ExpandedContent" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="22"/>
                 </Grid.RowDefinitions>
 
-                <!-- Top bar -->
-                <Grid Grid.Row="0" Margin="2,0,2,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Width="31" Height="31" CornerRadius="11" Background="#202B39" Margin="0,0,10,0">
-                            <TextBlock Text="S" Foreground="{DynamicResource AccentBrush}" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="SELAH" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="13" FontWeight="Bold"/>
-                            <TextBlock Text="YOUR QUIET DESKTOP SPACE" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" Margin="0,2,0,0"/>
+                <Border Grid.Row="0" Background="#090A0E" BorderBrush="{DynamicResource IslandBorderBrush}" BorderThickness="0,0,0,1" Padding="10,5">
+                    <DockPanel LastChildFill="True">
+                        <Button DockPanel.Dock="Right" Content="×" Click="CollapseButton_Click"
+                                Background="#20232C" Foreground="{DynamicResource PrimaryTextBrush}"
+                                BorderThickness="0" FontSize="16" Width="27" Height="27"
+                                Cursor="Hand" Margin="8,0,0,0"/>
+                        <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,0">
+                            <TextBlock x:Name="ClockText" Text="14:51" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                            <TextBlock x:Name="DateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource MutedTextBrush}" FontSize="7" HorizontalAlignment="Right"/>
                         </StackPanel>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,14,0">
-                        <TextBlock x:Name="ClockText" Text="14:51" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                        <TextBlock x:Name="DateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" HorizontalAlignment="Right" Margin="0,1,0,0"/>
-                    </StackPanel>
-                    <Button Grid.Column="2" Content="×" Click="CollapseButton_Click" Background="#252B38" Foreground="{DynamicResource PrimaryTextBrush}" BorderThickness="0" FontSize="17" Width="30" Height="30" Cursor="Hand"/>
-                </Grid>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Style="{StaticResource TopNavButton}" Content="⌂" Tag="Home" ToolTip="Overview" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="♫" Tag="Music" ToolTip="Now playing" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="✓" Tag="Tasks" ToolTip="Tasks" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="◷" Tag="Focus" ToolTip="Focus" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="▤" Tag="Bible" ToolTip="Bible" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="☼" Tag="Weather" ToolTip="Weather" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="▣" Tag="Tray" ToolTip="Tray" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="▧" Tag="Clips" ToolTip="Clipboard" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="▦" Tag="Calendar" ToolTip="Calendar" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="⌘" Tag="System" ToolTip="System" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="◉" Tag="Mirror" ToolTip="Mirror" Click="Navigate_Click"/>
+                                <Button Style="{StaticResource TopNavButton}" Content="⚙" Tag="Themes" ToolTip="Themes" Click="Navigate_Click"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DockPanel>
+                </Border>
 
-                <!-- Sidebar + page content -->
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="132"/>
-                        <ColumnDefinition Width="12"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Border Grid.Column="0" Background="#171B25" BorderBrush="{DynamicResource IslandBorderBrush}" BorderThickness="1" CornerRadius="15" Padding="8,10">
-                        <DockPanel LastChildFill="True">
-                            <TextBlock DockPanel.Dock="Top" Text="WORKSPACE" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold" Margin="8,2,0,8"/>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                                <StackPanel>
-                                    <Button Style="{StaticResource NavButton}" Content="⌂   Overview" Tag="Home" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="♫   Now playing" Tag="Music" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="✓   Tasks" Tag="Tasks" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="◷   Focus" Tag="Focus" Click="Navigate_Click"/>
-                                    <TextBlock Text="PERSONAL" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold" Margin="8,13,0,6"/>
-                                    <Button Style="{StaticResource NavButton}" Content="▤   Bible" Tag="Bible" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="☼   Weather" Tag="Weather" Click="Navigate_Click"/>
-                                    <TextBlock Text="TOOLS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold" Margin="8,13,0,6"/>
-                                    <Button Style="{StaticResource NavButton}" Content="▣   Tray" Tag="Tray" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="▧   Clipboard" Tag="Clips" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="▦   Calendar" Tag="Calendar" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="⌘   System" Tag="System" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="◉   Mirror" Tag="Mirror" Click="Navigate_Click"/>
-                                    <Button Style="{StaticResource NavButton}" Content="⚙   Themes" Tag="Themes" Click="Navigate_Click"/>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </DockPanel>
-                    </Border>
-
-                    <Border Grid.Column="2" Background="#141821" BorderBrush="{DynamicResource IslandBorderBrush}" BorderThickness="1" CornerRadius="15" Padding="15,14">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                            <Grid x:Name="PageHost">
+                <Border Grid.Row="1" Background="#090A0E" Padding="16,12,16,14">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <Grid x:Name="PageHost">
                                 <StackPanel x:Name="HomePage">
                                     <TextBlock Text="Good day." Style="{StaticResource PageTitle}"/>
                                     <TextBlock Text="Make room for what matters." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
@@ -444,16 +447,8 @@
                                     <Border Style="{StaticResource Card}"><StackPanel HorizontalAlignment="Center" Margin="0,15"><TextBlock Text="◉" Foreground="{DynamicResource AccentBrush}" FontSize="35" HorizontalAlignment="Center"/><TextBlock Text="Camera preview" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,10,0,5"/><TextBlock Text="The camera will only activate after you explicitly open this feature." Style="{StaticResource Muted}" TextWrapping="Wrap" TextAlignment="Center"/></StackPanel></Border>
                                 </StackPanel>
                             </Grid>
-                        </ScrollViewer>
-                    </Border>
-                </Grid>
-
-                <!-- Footer -->
-                <Grid Grid.Row="2" Margin="3,5,3,0">
-                    <TextBlock Text="SELAH  /  LOCAL-FIRST BY DESIGN" Foreground="#687084" FontSize="8" VerticalAlignment="Center"/>
-                    <TextBlock Text="A LITTLE SPACE TO BREATHE" Foreground="#687084" FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                </Grid>
+                    </ScrollViewer>
+                </Border>
             </Grid>
-        </Grid>
     </Border>
 </Window>
