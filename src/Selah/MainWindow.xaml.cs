@@ -14,8 +14,8 @@ namespace Selah;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private const double CompactWidth = 176;
-    private const double CompactHeight = 38;
+    private const double CompactWidth = 148;
+    private const double CompactHeight = 12;
     private const double ExpandedWidth = 620;
     private const double ExpandedHeight = 590;
     private const double TopOffset = 0;
@@ -39,7 +39,7 @@ public partial class MainWindow : Window
             WeatherPage, TrayPage, ClipsPage, CalendarPage, SystemPage, MirrorPage, ThemesPage
         });
 
-        _clockTimer.Tick += (_, _) => ClockText.Text = DateTime.Now.ToString("ddd, dd MMM  •  HH:mm");
+        _clockTimer.Tick += (_, _) => UpdateClockDisplay();
         _focusTimer.Tick += FocusTimer_Tick;
         _clockTimer.Start();
         UpdateFocusDisplay();
@@ -54,15 +54,29 @@ public partial class MainWindow : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        // Keep the native overlay window fixed; animate only the visible island surface.
-        // Width/Height animation preserves the compact pill's typography instead of scaling it down.
-        IslandSurface.Width = CompactWidth;
-        IslandSurface.Height = CompactHeight;
+        Width = CompactWidth;
+        Height = CompactHeight;
+        IslandSurface.Width = double.NaN;
+        IslandSurface.Height = double.NaN;
         PositionAtTopCenter();
+        UpdateClockDisplay();
     }
+
+    private void IslandSurface_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        => SetExpanded(true);
+
+    private void IslandSurface_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        => SetExpanded(false);
 
     private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(true);
     private void CollapseButton_Click(object sender, RoutedEventArgs e) => SetExpanded(false);
+
+    private void UpdateClockDisplay()
+    {
+        var now = DateTime.Now;
+        ClockText.Text = now.ToString("HH:mm");
+        DateText.Text = now.ToString("dddd, dd MMMM").ToUpperInvariant();
+    }
 
     private void SetExpanded(bool expanded)
     {
@@ -86,16 +100,23 @@ public partial class MainWindow : Window
 
         var targetWidth = expanded ? ExpandedWidth : CompactWidth;
         var targetHeight = expanded ? ExpandedHeight : CompactHeight;
+        var targetLeft = GetCenteredLeft(targetWidth);
         var duration = new Duration(TransitionDuration);
         var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
 
-        var widthAnimation = new DoubleAnimation(IslandSurface.Width, targetWidth, duration)
+        var widthAnimation = new DoubleAnimation(Width, targetWidth, duration)
         {
             EasingFunction = easing,
             FillBehavior = FillBehavior.HoldEnd
         };
 
-        var heightAnimation = new DoubleAnimation(IslandSurface.Height, targetHeight, duration)
+        var heightAnimation = new DoubleAnimation(Height, targetHeight, duration)
+        {
+            EasingFunction = easing,
+            FillBehavior = FillBehavior.HoldEnd
+        };
+
+        var leftAnimation = new DoubleAnimation(Left, targetLeft, duration)
         {
             EasingFunction = easing,
             FillBehavior = FillBehavior.HoldEnd
@@ -112,15 +133,21 @@ public partial class MainWindow : Window
             }
         };
 
-        IslandSurface.BeginAnimation(FrameworkElement.WidthProperty, widthAnimation);
-        IslandSurface.BeginAnimation(FrameworkElement.HeightProperty, heightAnimation);
+        BeginAnimation(WidthProperty, widthAnimation);
+        BeginAnimation(HeightProperty, heightAnimation);
+        BeginAnimation(LeftProperty, leftAnimation);
+    }
+
+    private static double GetCenteredLeft(double windowWidth)
+    {
+        var area = SystemParameters.WorkArea;
+        return area.Left + (area.Width - windowWidth) / 2;
     }
 
     private void PositionAtTopCenter()
     {
-        var area = SystemParameters.WorkArea;
-        Left = area.Left + (area.Width - ExpandedWidth) / 2;
-        Top = area.Top + TopOffset;
+        Left = GetCenteredLeft(Width);
+        Top = SystemParameters.WorkArea.Top + TopOffset;
     }
 
     private void Navigate_Click(object sender, RoutedEventArgs e)
