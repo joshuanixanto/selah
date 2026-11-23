@@ -3,10 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <SolidColorBrush x:Key="IslandBackgroundBrush" Color="#171923"/>
-        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#202431"/>
-        <SolidColorBrush x:Key="AccentBrush" Color="#A5B4FC"/>
-        <SolidColorBrush x:Key="MutedTextBrush" Color="#9CA3AF"/>
-        <SolidColorBrush x:Key="IslandBorderBrush" Color="#303442"/>
+        <!-- Semantic theme tokens. Controls consume these through DynamicResource. -->
+        <SolidColorBrush x:Key="IslandBackgroundBrush" Color="#101116"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1B1D27"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#72E4FF"/>
+        <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#A78BFA"/>
+        <SolidColorBrush x:Key="PrimaryTextBrush" Color="#F4F6FC"/>
+        <SolidColorBrush x:Key="MutedTextBrush" Color="#9BA3B7"/>
+        <SolidColorBrush x:Key="IslandBorderBrush" Color="#343746"/>
+        <SolidColorBrush x:Key="SuccessBrush" Color="#55D6A5"/>
+        <SolidColorBrush x:Key="WarningBrush" Color="#F5C76A"/>
+        <SolidColorBrush x:Key="ErrorBrush" Color="#FF6B78"/>
     </Application.Resources>
 </Application>
