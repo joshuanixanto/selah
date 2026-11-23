@@ -4,7 +4,7 @@
         Title="Selah" Width="148" Height="6" MinWidth="148" MaxWidth="760" MinHeight="6" MaxHeight="400"
         WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True"
         Background="Transparent" Topmost="True" ShowInTaskbar="False"
-        WindowStartupLocation="Manual" Loaded="Window_Loaded">
+        WindowStartupLocation="Manual" Loaded="Window_Loaded" PreviewKeyDown="Window_PreviewKeyDown" Focusable="True">
     <Window.Resources>
         <Style x:Key="NavButton" TargetType="Button">
             <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}"/>
