@@ -24,7 +24,7 @@ public partial class MainWindow : Window
     private const double IdleHeight = 5;
     private const double HoverWidth = 126;
     private const double HoverHeight = 26;
-    private const double ExpandedWidth = 640;
+    private const double ExpandedWidth = 720;
     private const double ExpandedHeight = 190;
     private const double TopOffset = 0;
     private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(360);
@@ -51,6 +51,7 @@ public partial class MainWindow : Window
             WeatherPage, TrayPage, ClipsPage, CalendarPage, SystemPage, MirrorPage, ThemesPage
         });
         TaskList.ItemsSource = _tasks;
+        DashboardTaskList.ItemsSource = _tasks;
         _tasks.CollectionChanged += Tasks_CollectionChanged;
 
         _clockTimer.Tick += (_, _) => UpdateClockDisplay();
@@ -244,7 +245,7 @@ public partial class MainWindow : Window
 
     private static double GetExpandedHeight(string pageName) => pageName switch
     {
-        "Home" => 160,
+        "Home" => 350,
         "Music" => 220,
         "Tasks" => 270,
         "Focus" => 210,
@@ -320,16 +321,26 @@ public partial class MainWindow : Window
 
     private void AddTask_Click(object sender, RoutedEventArgs e)
     {
-        var title = TaskInput.Text.Trim();
+        AddTask(TaskInput);
+    }
+
+    private void DashboardAddTask_Click(object sender, RoutedEventArgs e)
+    {
+        AddTask(DashboardTaskInput);
+    }
+
+    private void AddTask(TextBox input)
+    {
+        var title = input.Text.Trim();
         if (title.Length == 0)
             return;
 
         var task = new TaskItem(title);
         task.PropertyChanged += Task_PropertyChanged;
         _tasks.Add(task);
-        TaskInput.Clear();
+        input.Clear();
         UpdateTaskCount();
-        TaskInput.Focus();
+        input.Focus();
     }
 
     private void RemoveTask_Click(object sender, RoutedEventArgs e)
@@ -361,6 +372,7 @@ public partial class MainWindow : Window
         TaskCountText.Text = $"{pending} open";
         TaskSummaryText.Text = $"{pending} open · {completed} done";
         HomeTaskCountText.Text = $"{pending} pending";
+        DashboardTaskSummaryText.Text = $"{pending} open · {completed} done";
         TaskEmptyText.Visibility = _tasks.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
@@ -370,6 +382,7 @@ public partial class MainWindow : Window
         _focusRunning = true;
         _focusTimer.Start();
         FocusStatusText.Text = "Focus session in progress.";
+        DashboardFocusTimeText.ToolTip = "Focus session running";
     }
 
     private void FocusPause_Click(object sender, RoutedEventArgs e)
@@ -377,6 +390,7 @@ public partial class MainWindow : Window
         _focusRunning = false;
         _focusTimer.Stop();
         FocusStatusText.Text = "Session paused.";
+        DashboardFocusTimeText.ToolTip = "Focus session paused";
     }
 
     private void FocusReset_Click(object sender, RoutedEventArgs e)
@@ -385,6 +399,7 @@ public partial class MainWindow : Window
         _focusTimer.Stop();
         _focusRemainingSeconds = 25 * 60;
         FocusStatusText.Text = "Ready when you are.";
+        DashboardFocusTimeText.ToolTip = "Focus session ready";
         UpdateFocusDisplay();
     }
 
@@ -399,6 +414,7 @@ public partial class MainWindow : Window
             _focusRunning = false;
             _focusTimer.Stop();
             FocusStatusText.Text = "Session complete. Take a break.";
+            DashboardFocusTimeText.ToolTip = "Session complete";
         }
     }
 
@@ -407,6 +423,7 @@ public partial class MainWindow : Window
         var minutes = _focusRemainingSeconds / 60;
         var seconds = _focusRemainingSeconds % 60;
         FocusTimeText.Text = $"{minutes:00}:{seconds:00}";
+        DashboardFocusTimeText.Text = FocusTimeText.Text;
     }
 
     private void ThemePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -489,20 +506,27 @@ public partial class MainWindow : Window
                 : "Open Spotify, browser, or another media app";
             PlayerStatusText.Text = hasSession ? media!.PlaybackStatus : "Waiting for a media session";
             HomeNowPlayingTitle.Text = hasSession ? media!.Title : "Nothing playing";
+            DashboardNowPlayingTitle.Text = hasSession ? media!.Title : "Nothing playing";
             HomeNowPlayingArtist.Text = hasSession
                 ? (string.IsNullOrWhiteSpace(media!.Artist) ? media!.AppName : media!.Artist)
                 : "Start audio on your PC";
+            DashboardNowPlayingArtist.Text = HomeNowPlayingArtist.Text;
+            DashboardPlayerStatusText.Text = hasSession ? media!.PlaybackStatus : "Idle";
 
             var artwork = CreateArtwork(media?.ArtworkBytes);
             MediaArtworkImage.Source = artwork;
+            DashboardArtworkImage.Source = artwork;
+            DashboardArtworkImage.Visibility = artwork is null ? Visibility.Collapsed : Visibility.Visible;
             MediaArtworkImage.Visibility = artwork is null ? Visibility.Collapsed : Visibility.Visible;
 
             PreviousTrackButton.IsEnabled = hasSession;
+            DashboardPlayPauseButton.IsEnabled = hasSession;
             PlayPauseButton.IsEnabled = hasSession;
             NextTrackButton.IsEnabled = hasSession;
             PlayPauseButton.Content = hasSession && media!.IsPlaying
                 ? ((char)0xE769).ToString()
                 : ((char)0xE768).ToString();
+            DashboardPlayPauseButton.Content = PlayPauseButton.Content;
 
             if (hasSession && media!.Duration > TimeSpan.Zero)
             {
