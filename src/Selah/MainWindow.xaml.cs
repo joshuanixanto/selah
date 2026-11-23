@@ -42,6 +42,7 @@ public partial class MainWindow : Window
     private bool _isTransitioning;
     private bool _focusRunning;
     private int _focusRemainingSeconds = 25 * 60;
+    private DateTime? _selectedTaskDueAt;
 
     public MainWindow()
     {
@@ -365,6 +366,7 @@ public partial class MainWindow : Window
             _ => DateTime.Now
         };
 
+        _selectedTaskDueAt = due;
         TaskInput.ToolTip = $"Next task due: {due:ddd, HH:mm}";
     }
 
@@ -384,7 +386,9 @@ public partial class MainWindow : Window
         if (title.Length == 0)
             return;
 
-        var task = new TaskItem(title);
+        var task = new TaskItem(title, _selectedTaskDueAt);
+        _selectedTaskDueAt = null;
+        TaskInput.ToolTip = "What needs to get done?";
         task.PropertyChanged += Task_PropertyChanged;
         _tasks.Add(task);
         input.Clear();
