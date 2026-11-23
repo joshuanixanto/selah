@@ -125,7 +125,7 @@
     </Window.Resources>
 
     <Border x:Name="IslandSurface"
-            HorizontalAlignment="Stretch" VerticalAlignment="Top"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Background="{DynamicResource IslandBackgroundBrush}"
             BorderBrush="{DynamicResource IslandBorderBrush}"
             BorderThickness="1" CornerRadius="0,0,12,12" Padding="0"
