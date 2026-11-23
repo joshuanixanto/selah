@@ -1,7 +1,7 @@
 <Window x:Class="Selah.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Selah" Width="148" Height="6" MinWidth="148" MaxWidth="620" MinHeight="6" MaxHeight="590"
+        Title="Selah" Width="148" Height="6" MinWidth="148" MaxWidth="760" MinHeight="6" MaxHeight="450"
         WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True"
         Background="Transparent" Topmost="True" ShowInTaskbar="False"
         WindowStartupLocation="Manual" Loaded="Window_Loaded">
