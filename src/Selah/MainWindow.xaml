@@ -268,9 +268,9 @@
                                                     <TextBlock x:Name="DashboardPlayerStatusText" Text="Idle" Style="{StaticResource Muted}" FontSize="7.5" Margin="0,2,0,0"/>
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <Button Style="{StaticResource TransportButton}" Content="&#xE892;" Click="PreviousTrack_Click" IsEnabled="False" ToolTip="Previous" Width="25" Height="25"/>
+                                                    <Button x:Name="DashboardPreviousTrackButton" Style="{StaticResource TransportButton}" Content="&#xE892;" Click="PreviousTrack_Click" IsEnabled="False" ToolTip="Previous" Width="25" Height="25"/>
                                                     <Button x:Name="DashboardPlayPauseButton" Style="{StaticResource TransportButton}" Content="&#xE768;" Click="PlayPause_Click" IsEnabled="False" ToolTip="Play / pause" Width="29" Height="29" Margin="3,0"/>
-                                                    <Button Style="{StaticResource TransportButton}" Content="&#xE893;" Click="NextTrack_Click" IsEnabled="False" ToolTip="Next" Width="25" Height="25"/>
+                                                    <Button x:Name="DashboardNextTrackButton" Style="{StaticResource TransportButton}" Content="&#xE893;" Click="NextTrack_Click" IsEnabled="False" ToolTip="Next" Width="25" Height="25"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Border>
