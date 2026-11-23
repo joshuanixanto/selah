@@ -236,9 +236,29 @@ public partial class MainWindow : Window
 
     private void SetActiveNavigation(string pageName)
     {
+        var tabs = new Dictionary<string, (string Icon, string Label)>(StringComparer.Ordinal)
+        {
+            ["Home"] = ("⌂", "Home"),
+            ["Music"] = ("♫", "Music"),
+            ["Tasks"] = ("✓", "Tasks"),
+            ["Focus"] = ("◷", "Focus"),
+            ["Bible"] = ("▤", "Bible"),
+            ["Weather"] = ("☼", "Weather"),
+            ["Tray"] = ("▣", "Tray"),
+            ["Clips"] = ("▧", "Clips"),
+            ["Calendar"] = ("▦", "Calendar"),
+            ["System"] = ("⌘", "System"),
+            ["Mirror"] = ("◉", "Mirror"),
+            ["Themes"] = ("⚙", "Themes")
+        };
+
         foreach (var button in TopNavigation.Children.OfType<Button>())
         {
-            var isActive = string.Equals(button.Tag?.ToString(), pageName, StringComparison.Ordinal);
+            var key = button.Tag?.ToString() ?? string.Empty;
+            var isActive = string.Equals(key, pageName, StringComparison.Ordinal);
+            if (tabs.TryGetValue(key, out var tab))
+                button.Content = isActive ? $"{tab.Icon}  {tab.Label}" : tab.Icon;
+
             button.Background = isActive
                 ? new SolidColorBrush(Color.FromArgb(36, 255, 255, 255))
                 : Brushes.Transparent;
