@@ -26,6 +26,8 @@ public partial class MainWindow : Window
     private readonly ThemeService _themeService = new();
     private readonly DispatcherTimer _clockTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _focusTimer = new() { Interval = TimeSpan.FromSeconds(1) };
+    private readonly DispatcherTimer _mediaRefreshTimer = new() { Interval = TimeSpan.FromSeconds(2) };
+    private readonly MediaPlayerService _mediaPlayer = new();
     private readonly List<StackPanel> _pages = [];
     private bool _isExpanded;
     private bool _isHovered;
@@ -45,6 +47,7 @@ public partial class MainWindow : Window
 
         _clockTimer.Tick += (_, _) => UpdateClockDisplay();
         _focusTimer.Tick += FocusTimer_Tick;
+        _mediaRefreshTimer.Tick += async (_, _) => await RefreshMediaAsync();
         _clockTimer.Start();
         UpdateFocusDisplay();
 
@@ -55,7 +58,7 @@ public partial class MainWindow : Window
     }
 
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
         Width = IdleWidth;
         Height = IdleHeight;
@@ -65,6 +68,7 @@ public partial class MainWindow : Window
         UpdateClockDisplay();
         SetActiveNavigation("Home");
         SetCompactState(false, animate: false);
+        await InitializeMediaAsync();
     }
 
     private void IslandSurface_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -79,6 +83,30 @@ public partial class MainWindow : Window
             SetCompactState(false);
     }
 
+    private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (_isExpanded)
+            SetExpanded(false);
+        else
+            SetCompactState(false);
+    }
+
+    private void IslandSurface_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (!_isExpanded) return;
+
+        DependencyObject? current = e.OriginalSource as DependencyObject;
+        while (current is not null && !ReferenceEquals(current, IslandSurface))
+        {
+            if (current is ButtonBase || current is TextBoxBase || current is ComboBox)
+                return;
+            current = VisualTreeHelper.GetParent(current);
+        }
+
+        SetExpanded(false);
+        e.Handled = true;
+    }
+
     private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (e.Key != System.Windows.Input.Key.Escape || !_isExpanded)
@@ -88,7 +116,7 @@ public partial class MainWindow : Window
         e.Handled = true;
     }
 
-    private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(true);
+    private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(!_isExpanded);
 
     private void CollapseButton_Click(object sender, RoutedEventArgs e)
     {
@@ -390,6 +418,73 @@ public partial class MainWindow : Window
 
         ThemeStatusText.Text = "Invalid HEX color. Every field must use the #RRGGBB format.";
         return null;
+    }
+
+    private async Task InitializeMediaAsync()
+    {
+        try
+        {
+            await _mediaPlayer.InitializeAsync();
+            await RefreshMediaAsync();
+            _mediaRefreshTimer.Start();
+        }
+        catch (Exception ex)
+        {
+            PlayerStatusText.Text = "Media service unavailable: " + ex.Message;
+        }
+    }
+
+    private async Task RefreshMediaAsync()
+    {
+        try
+        {
+            var media = await _mediaPlayer.GetCurrentMediaAsync();
+            var hasSession = media is not null;
+            PlayerTitleText.Text = hasSession ? media!.Title : "Nothing playing";
+            PlayerArtistText.Text = hasSession
+                ? (string.IsNullOrWhiteSpace(media!.Artist) ? media!.AppName : media!.Artist + " · " + media!.AppName)
+                : "Open Spotify, browser, or another media app";
+            PlayerStatusText.Text = hasSession ? media!.PlaybackStatus : "Waiting for a media session";
+            HomeNowPlayingTitle.Text = hasSession ? media!.Title : "Nothing playing";
+            HomeNowPlayingArtist.Text = hasSession
+                ? (string.IsNullOrWhiteSpace(media!.Artist) ? media!.AppName : media!.Artist)
+                : "Start audio on your PC";
+            PreviousTrackButton.IsEnabled = hasSession;
+            PlayPauseButton.IsEnabled = hasSession;
+            NextTrackButton.IsEnabled = hasSession;
+            PlayPauseButton.Content = hasSession && media!.IsPlaying ? "Pause" : "Play";
+        }
+        catch (Exception ex)
+        {
+            PlayerStatusText.Text = "Could not read media session: " + ex.Message;
+        }
+    }
+
+    private async void PlayPause_Click(object sender, RoutedEventArgs e)
+    {
+        await _mediaPlayer.TogglePlayPauseAsync();
+        await RefreshMediaAsync();
+    }
+
+    private async void PreviousTrack_Click(object sender, RoutedEventArgs e)
+    {
+        await _mediaPlayer.SkipPreviousAsync();
+        await RefreshMediaAsync();
+    }
+
+    private async void NextTrack_Click(object sender, RoutedEventArgs e)
+    {
+        await _mediaPlayer.SkipNextAsync();
+        await RefreshMediaAsync();
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        _mediaRefreshTimer.Stop();
+        _focusTimer.Stop();
+        _clockTimer.Stop();
+        _mediaPlayer.Dispose();
+        base.OnClosed(e);
     }
 
     private void PopulatePaletteInputs(ThemePalette palette)
