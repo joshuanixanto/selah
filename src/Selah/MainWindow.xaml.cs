@@ -24,7 +24,7 @@ public partial class MainWindow : Window
     private const double IdleHeight = 5;
     private const double HoverWidth = 126;
     private const double HoverHeight = 26;
-    private const double ExpandedWidth = 760;
+    private const double ExpandedWidth = 640;
     private const double ExpandedHeight = 190;
     private const double TopOffset = 0;
     private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(360);
@@ -244,18 +244,18 @@ public partial class MainWindow : Window
 
     private static double GetExpandedHeight(string pageName) => pageName switch
     {
-        "Home" => 190,
-        "Music" => 330,
-        "Tasks" => 330,
-        "Focus" => 250,
-        "Bible" => 400,
-        "Themes" => 400,
-        "Weather" => 190,
-        "Tray" => 190,
-        "Clips" => 190,
-        "Calendar" => 190,
-        "System" => 190,
-        "Mirror" => 190,
+        "Home" => 148,
+        "Music" => 220,
+        "Tasks" => 270,
+        "Focus" => 210,
+        "Bible" => 330,
+        "Themes" => 350,
+        "Weather" => 170,
+        "Tray" => 170,
+        "Clips" => 170,
+        "Calendar" => 170,
+        "System" => 170,
+        "Mirror" => 170,
         _ => ExpandedHeight
     };
 
@@ -308,7 +308,7 @@ public partial class MainWindow : Window
             var key = button.Tag?.ToString() ?? string.Empty;
             var isActive = string.Equals(key, pageName, StringComparison.Ordinal);
             if (tabs.TryGetValue(key, out var tab))
-                button.Content = isActive ? $"{tab.Icon}  {tab.Label}" : tab.Icon;
+                button.Content = tab.Icon;
 
             button.Background = isActive
                 ? (Brush)(TryFindResource("CardBackgroundBrush") ?? Brushes.Transparent)
