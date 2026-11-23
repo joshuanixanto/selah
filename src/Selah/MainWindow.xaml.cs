@@ -1,8 +1,13 @@
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Selah.Models;
 using Selah.Services;
@@ -30,12 +35,12 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _mediaRefreshTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private readonly MediaPlayerService _mediaPlayer = new();
     private readonly List<StackPanel> _pages = [];
+    private readonly ObservableCollection<TaskItem> _tasks = [];
     private bool _isExpanded;
     private bool _isHovered;
     private bool _isTransitioning;
     private bool _focusRunning;
     private int _focusRemainingSeconds = 25 * 60;
-    private int _taskCount;
 
     public MainWindow()
     {
@@ -45,6 +50,8 @@ public partial class MainWindow : Window
             HomePage, MusicPage, TasksPage, FocusPage, BiblePage,
             WeatherPage, TrayPage, ClipsPage, CalendarPage, SystemPage, MirrorPage, ThemesPage
         });
+        TaskList.ItemsSource = _tasks;
+        _tasks.CollectionChanged += Tasks_CollectionChanged;
 
         _clockTimer.Tick += (_, _) => UpdateClockDisplay();
         _focusTimer.Tick += FocusTimer_Tick;
@@ -304,28 +311,57 @@ public partial class MainWindow : Window
                 button.Content = isActive ? $"{tab.Icon}  {tab.Label}" : tab.Icon;
 
             button.Background = isActive
-                ? new SolidColorBrush(Color.FromArgb(36, 255, 255, 255))
+                ? (Brush)(TryFindResource("CardBackgroundBrush") ?? Brushes.Transparent)
                 : Brushes.Transparent;
             button.Foreground = (Brush)(TryFindResource(isActive ? "PrimaryTextBrush" : "MutedTextBrush")
-                ?? (isActive ? Brushes.White : Brushes.Gray));
+                ?? Brushes.Gray);
         }
     }
 
     private void AddTask_Click(object sender, RoutedEventArgs e)
     {
         var title = TaskInput.Text.Trim();
-        if (title.Length == 0) return;
+        if (title.Length == 0)
+            return;
 
-        TaskList.Items.Add(new ListBoxItem
-        {
-            Content = title,
-            Padding = new Thickness(8, 6, 8, 6),
-            Background = new SolidColorBrush(Color.FromRgb(42, 49, 64)),
-            Margin = new Thickness(0, 0, 0, 5)
-        });
+        var task = new TaskItem(title);
+        task.PropertyChanged += Task_PropertyChanged;
+        _tasks.Add(task);
         TaskInput.Clear();
-        _taskCount++;
-        TaskCountText.Text = $"{_taskCount} pending";
+        UpdateTaskCount();
+        TaskInput.Focus();
+    }
+
+    private void RemoveTask_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: TaskItem task })
+            return;
+
+        task.PropertyChanged -= Task_PropertyChanged;
+        _tasks.Remove(task);
+        UpdateTaskCount();
+    }
+
+    private void Tasks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        UpdateTaskCount();
+    }
+
+    private void Task_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(TaskItem.IsCompleted))
+            UpdateTaskCount();
+    }
+
+    private void UpdateTaskCount()
+    {
+        var completed = _tasks.Count(task => task.IsCompleted);
+        var pending = _tasks.Count - completed;
+
+        TaskCountText.Text = $"{pending} open";
+        TaskSummaryText.Text = $"{pending} open · {completed} done";
+        HomeTaskCountText.Text = $"{pending} pending";
+        TaskEmptyText.Visibility = _tasks.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void FocusStart_Click(object sender, RoutedEventArgs e)
@@ -446,6 +482,7 @@ public partial class MainWindow : Window
         {
             var media = await _mediaPlayer.GetCurrentMediaAsync();
             var hasSession = media is not null;
+
             PlayerTitleText.Text = hasSession ? media!.Title : "Nothing playing";
             PlayerArtistText.Text = hasSession
                 ? (string.IsNullOrWhiteSpace(media!.Artist) ? media!.AppName : media!.Artist + " · " + media!.AppName)
@@ -455,15 +492,94 @@ public partial class MainWindow : Window
             HomeNowPlayingArtist.Text = hasSession
                 ? (string.IsNullOrWhiteSpace(media!.Artist) ? media!.AppName : media!.Artist)
                 : "Start audio on your PC";
+
+            var artwork = CreateArtwork(media?.ArtworkBytes);
+            MediaArtworkImage.Source = artwork;
+            MediaArtworkImage.Visibility = artwork is null ? Visibility.Collapsed : Visibility.Visible;
+
             PreviousTrackButton.IsEnabled = hasSession;
             PlayPauseButton.IsEnabled = hasSession;
             NextTrackButton.IsEnabled = hasSession;
-            PlayPauseButton.Content = hasSession && media!.IsPlaying ? "Pause" : "Play";
+            PlayPauseButton.Content = hasSession && media!.IsPlaying ? "\\uE769" : "\\uE768";
+
+            if (hasSession && media!.Duration > TimeSpan.Zero)
+            {
+                var minimum = Math.Max(0, (media.MinSeekTime - media.StartTime).TotalSeconds);
+                var maximum = media.MaxSeekTime > media.StartTime
+                    ? (media.MaxSeekTime - media.StartTime).TotalSeconds
+                    : media.Duration.TotalSeconds;
+
+                PlayerSeekBar.Minimum = minimum;
+                PlayerSeekBar.Maximum = Math.Max(minimum + 0.1, maximum);
+                PlayerSeekBar.IsEnabled = maximum > minimum;
+                if (!PlayerSeekBar.IsMouseCaptureWithin)
+                    PlayerSeekBar.Value = Math.Clamp(media.Position.TotalSeconds, minimum, maximum);
+
+                PlayerPositionText.Text = FormatMediaTime(media.Position);
+                PlayerDurationText.Text = FormatMediaTime(media.Duration);
+            }
+            else
+            {
+                PlayerSeekBar.Minimum = 0;
+                PlayerSeekBar.Maximum = 100;
+                PlayerSeekBar.Value = 0;
+                PlayerSeekBar.IsEnabled = false;
+                PlayerPositionText.Text = "0:00";
+                PlayerDurationText.Text = "0:00";
+            }
         }
         catch (Exception ex)
         {
             PlayerStatusText.Text = "Could not read media session: " + ex.Message;
         }
+    }
+
+    private static BitmapImage? CreateArtwork(byte[]? bytes)
+    {
+        if (bytes is null || bytes.Length == 0)
+            return null;
+
+        try
+        {
+            using var stream = new MemoryStream(bytes);
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.StreamSource = stream;
+            image.EndInit();
+            image.Freeze();
+            return image;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static string FormatMediaTime(TimeSpan value)
+    {
+        return value.TotalHours >= 1
+            ? value.ToString(@"h\\:mm\\:ss")
+            : value.ToString(@"m\\:ss");
+    }
+
+    private async void PlayerSeekBar_Seek(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        await SeekToSelectedPositionAsync();
+    }
+
+    private async void PlayerSeekBar_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        await SeekToSelectedPositionAsync();
+    }
+
+    private async Task SeekToSelectedPositionAsync()
+    {
+        if (!PlayerSeekBar.IsEnabled)
+            return;
+
+        await _mediaPlayer.SeekAsync(TimeSpan.FromSeconds(PlayerSeekBar.Value));
+        await RefreshMediaAsync();
     }
 
     private async void PlayPause_Click(object sender, RoutedEventArgs e)
