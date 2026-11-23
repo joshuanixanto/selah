@@ -106,10 +106,10 @@ public sealed class ThemeService
     private static void SetBrush(ResourceDictionary resources, string key, string hex)
     {
         var color = (Color)ColorConverter.ConvertFromString(hex);
-        if (resources[key] is SolidColorBrush brush)
-            brush.Color = color;
-        else
-            resources[key] = new SolidColorBrush(color);
+
+        // XAML resource brushes may be frozen by WPF. Replace the resource
+        // instead of mutating an existing SolidColorBrush instance.
+        resources[key] = new SolidColorBrush(color);
     }
 
     private static ThemePalette Palette(
