@@ -518,6 +518,9 @@ public partial class MainWindow : Window
             MediaArtworkImage.Visibility = artwork is null ? Visibility.Collapsed : Visibility.Visible;
 
             PreviousTrackButton.IsEnabled = hasSession;
+            NextTrackButton.IsEnabled = hasSession;
+            DashboardPreviousTrackButton.IsEnabled = hasSession;
+            DashboardNextTrackButton.IsEnabled = hasSession;
             DashboardPlayPauseButton.IsEnabled = hasSession;
             PlayPauseButton.IsEnabled = hasSession;
             NextTrackButton.IsEnabled = hasSession;
