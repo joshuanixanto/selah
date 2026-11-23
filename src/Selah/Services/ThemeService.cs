@@ -39,7 +39,10 @@ public sealed class ThemeService
             ["Aurora"] = Palette("Aurora", "#111522", "#20283A", "#7CE7C4", "#B69CFF", "#F0F4FF", "#A9B4CA", "#39465B"),
             ["Lavender"] = Palette("Lavender", "#191624", "#282238", "#C4A7E7", "#F0A6CA", "#F4EFFB", "#B8AFC8", "#453A56"),
             ["Arctic"] = Palette("Arctic", "#101923", "#1C2A38", "#8DE3FF", "#B8D7FF", "#F0F8FF", "#AFC4D6", "#354B5D"),
-            ["Ember"] = Palette("Ember", "#1A1110", "#2B1B18", "#FF865E", "#FFC46B", "#FFF0E8", "#C9A99A", "#55362E")
+            ["Ember"] = Palette("Ember", "#1A1110", "#2B1B18", "#FF865E", "#FFC46B", "#FFF0E8", "#C9A99A", "#55362E"),
+            ["Paper"] = Palette("Paper", "#F4F1EA", "#FFFFFF", "#2563EB", "#7C3AED", "#20242C", "#626B78", "#D8D3C8"),
+            ["Snow"] = Palette("Snow", "#F7F9FC", "#FFFFFF", "#2563EB", "#0891B2", "#18212F", "#64748B", "#DCE3EC"),
+            ["Solarized Light"] = Palette("Solarized Light", "#FDF6E3", "#EEE8D5", "#268BD2", "#2AA198", "#33424A", "#657B83", "#D6CEB8")
         };
 
     public IReadOnlyList<string> PresetNames => _presets.Keys.OrderBy(name => name).ToArray();
@@ -54,8 +57,11 @@ public sealed class ThemeService
         SetBrush(resources, "CardBackgroundBrush", palette.Surface);
         SetBrush(resources, "AccentBrush", palette.Primary);
         SetBrush(resources, "SecondaryAccentBrush", palette.Secondary);
-        SetBrush(resources, "PrimaryTextBrush", palette.Text);
-        SetBrush(resources, "MutedTextBrush", palette.Muted);
+        // Keep text readable even when a custom palette pairs a light surface with light text.
+        var textColor = EnsureContrast(palette.Text, palette.Background, 4.5);
+        var mutedColor = EnsureContrast(palette.Muted, palette.Background, 3.0);
+        SetBrush(resources, "PrimaryTextBrush", textColor);
+        SetBrush(resources, "MutedTextBrush", mutedColor);
         SetBrush(resources, "IslandBorderBrush", palette.Border);
         SetBrush(resources, "SuccessBrush", palette.Success);
         SetBrush(resources, "WarningBrush", palette.Warning);
@@ -101,6 +107,36 @@ public sealed class ThemeService
     {
         if (string.IsNullOrWhiteSpace(value) || value.Length != 7 || value[0] != '#') return false;
         return value.Skip(1).All(Uri.IsHexDigit);
+    }
+
+    private static string EnsureContrast(string foregroundHex, string backgroundHex, double minimumRatio)
+    {
+        var foreground = (Color)ColorConverter.ConvertFromString(foregroundHex);
+        var background = (Color)ColorConverter.ConvertFromString(backgroundHex);
+        if (ContrastRatio(foreground, background) >= minimumRatio)
+            return foregroundHex;
+
+        var black = Colors.Black;
+        var white = Colors.White;
+        return ContrastRatio(black, background) >= ContrastRatio(white, background) ? "#000000" : "#FFFFFF";
+    }
+
+    private static double ContrastRatio(Color first, Color second)
+    {
+        static double Luminance(Color color)
+        {
+            static double Linear(byte channel)
+            {
+                var value = channel / 255.0;
+                return value <= 0.04045 ? value / 12.92 : Math.Pow((value + 0.055) / 1.055, 2.4);
+            }
+
+            return 0.2126 * Linear(color.R) + 0.7152 * Linear(color.G) + 0.0722 * Linear(color.B);
+        }
+
+        var lighter = Math.Max(Luminance(first), Luminance(second));
+        var darker = Math.Min(Luminance(first), Luminance(second));
+        return (lighter + 0.05) / (darker + 0.05);
     }
 
     private static void SetBrush(ResourceDictionary resources, string key, string hex)
