@@ -173,7 +173,7 @@
                     <TextBlock x:Name="CompactClockText"
                                Text="14:51"
                                Foreground="{DynamicResource PrimaryTextBrush}"
-                               FontSize="10"
+                               FontSize="8.6"
                                FontWeight="SemiBold"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"/>
@@ -192,7 +192,7 @@
                         <Button Style="{StaticResource TopNavButton}" Content="◷  25m" Tag="Focus" ToolTip="Open focus timer" Click="Navigate_Click"/>
                         <Button Style="{StaticResource TopNavButton}" Content="⚙" Tag="Themes" ToolTip="Appearance and themes" Click="Navigate_Click"/>
                     </StackPanel>
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
                         <StackPanel x:Name="TopNavigation" Orientation="Horizontal" VerticalAlignment="Center">
                             <Button Style="{StaticResource TopNavButton}" Content="⌂" Tag="Home" ToolTip="Overview" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TopNavButton}" Content="♫" Tag="Music" ToolTip="Now playing" Click="Navigate_Click"/>
@@ -209,7 +209,7 @@
                     </ScrollViewer>
                 </DockPanel>
                 <Grid Grid.Row="2">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                         <Grid x:Name="PageHost">
                                 <StackPanel x:Name="HomePage">
                                     <Grid Height="130">
@@ -224,31 +224,31 @@
                                             <Grid>
                                                 <Grid.ColumnDefinitions><ColumnDefinition Width="74"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                                                 <Border Width="64" Height="64" CornerRadius="12" Background="#17191F" VerticalAlignment="Center">
-                                                    <TextBlock Text="♫" FontSize="27" Foreground="{DynamicResource MutedTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="♫" FontSize="23.2" Foreground="{DynamicResource MutedTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                                                    <TextBlock Text="NOW PLAYING" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,0,5"/>
-                                                    <TextBlock Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="13" FontWeight="SemiBold"/>
-                                                    <TextBlock Text="Start audio on your PC" Style="{StaticResource Muted}" FontSize="10" TextWrapping="Wrap" Margin="0,3,0,0"/>
+                                                    <TextBlock Text="NOW PLAYING" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold" Margin="0,0,0,5"/>
+                                                    <TextBlock Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11.2" FontWeight="SemiBold"/>
+                                                    <TextBlock Text="Start audio on your PC" Style="{StaticResource Muted}" FontSize="8.6" TextWrapping="Wrap" Margin="0,3,0,0"/>
                                                 </StackPanel>
                                             </Grid>
                                         </StackPanel>
                                         <Border Grid.Column="1" Background="{DynamicResource IslandBorderBrush}"/>
                                         <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="16,0">
-                                            <TextBlock Text="TODAY" Foreground="{DynamicResource AccentBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,0,8"/>
-                                            <TextBlock x:Name="HomeDateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                            <TextBlock Text="TODAY" Foreground="{DynamicResource AccentBrush}" FontSize="8.3" FontWeight="Bold" Margin="0,0,0,8"/>
+                                            <TextBlock x:Name="HomeDateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="13.8" FontWeight="SemiBold" Margin="0,0,0,10"/>
                                             <StackPanel Orientation="Horizontal">
                                                 <Border Background="#20232C" CornerRadius="9" Padding="9,6" Margin="0,0,7,0">
-                                                    <StackPanel><TextBlock Text="FOCUS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock Text="25 min" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
+                                                    <StackPanel><TextBlock Text="FOCUS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock Text="25 min" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10.3" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
                                                 </Border>
                                                 <Border Background="#20232C" CornerRadius="9" Padding="9,6">
-                                                    <StackPanel><TextBlock Text="TASKS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
+                                                    <StackPanel><TextBlock Text="TASKS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10.3" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
                                                 </Border>
                                             </StackPanel>
                                         </StackPanel>
                                         <Border Grid.Column="3" Background="{DynamicResource IslandBorderBrush}"/>
                                         <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <TextBlock Text="QUICK ACCESS" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,0,8"/>
+                                            <TextBlock Text="QUICK ACCESS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold" Margin="0,0,0,8"/>
                                             <Button Style="{StaticResource SecondaryButton}" Content="Tasks  →" Tag="Tasks" Click="Navigate_Click" HorizontalAlignment="Stretch" Margin="0,0,0,5"/>
                                             <Button Style="{StaticResource SecondaryButton}" Content="Focus  →" Tag="Focus" Click="Navigate_Click" HorizontalAlignment="Stretch"/>
                                         </StackPanel>
@@ -261,9 +261,9 @@
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel HorizontalAlignment="Center" Margin="0,12,0,12">
                                             <Border Width="82" Height="82" CornerRadius="18" Background="#252D3C" HorizontalAlignment="Center">
-                                                <TextBlock Text="♫" Foreground="{DynamicResource AccentBrush}" FontSize="37" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Text="♫" Foreground="{DynamicResource AccentBrush}" FontSize="31.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,13,0,4"/>
+                                            <TextBlock Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12.9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,13,0,4"/>
                                             <TextBlock Text="No active media session detected." Style="{StaticResource Muted}" HorizontalAlignment="Center"/>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
                                                 <Button Style="{StaticResource SecondaryButton}" Content="Previous" IsEnabled="False"/>
@@ -280,14 +280,14 @@
                                     <TextBlock Text="Capture it. Then get it done." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel>
-                                            <TextBlock Text="NEW TASK" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,0,8"/>
+                                            <TextBlock Text="NEW TASK" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold" Margin="0,0,0,8"/>
                                             <DockPanel>
                                                 <Button DockPanel.Dock="Right" Style="{StaticResource ActionButton}" Content="Add task" Click="AddTask_Click" Margin="8,0,0,0"/>
                                                 <TextBox x:Name="TaskInput" Height="36" VerticalContentAlignment="Center"/>
                                             </DockPanel>
                                         </StackPanel>
                                     </Border>
-                                    <TextBlock Text="YOUR LIST" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold" Margin="2,3,0,8"/>
+                                    <TextBlock Text="YOUR LIST" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold" Margin="2,3,0,8"/>
                                     <ListBox x:Name="TaskList" MaxHeight="250"/>
                                 </StackPanel>
 
@@ -297,9 +297,9 @@
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel HorizontalAlignment="Center" Margin="0,15,0,15">
                                             <Border Width="58" Height="58" CornerRadius="18" Background="#202B39" HorizontalAlignment="Center">
-                                                <TextBlock Text="◷" Foreground="{DynamicResource AccentBrush}" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Text="◷" Foreground="{DynamicResource AccentBrush}" FontSize="24.1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock x:Name="FocusTimeText" Text="25:00" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="52" FontWeight="Light" HorizontalAlignment="Center" Margin="0,12,0,4"/>
+                                            <TextBlock x:Name="FocusTimeText" Text="25:00" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="44.7" FontWeight="Light" HorizontalAlignment="Center" Margin="0,12,0,4"/>
                                             <TextBlock x:Name="FocusStatusText" Text="Ready when you are." Style="{StaticResource Muted}" HorizontalAlignment="Center"/>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
                                                 <Button Style="{StaticResource ActionButton}" Content="Start" Click="FocusStart_Click"/>
@@ -316,16 +316,16 @@
                                     <TextBlock Text="Make Selah feel like your space." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel>
-                                            <TextBlock Text="THEME LIBRARY" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/>
+                                            <TextBlock Text="THEME LIBRARY" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/>
                                             <TextBlock Text="Choose a starting point" Style="{StaticResource Heading}" Margin="0,5,0,10"/>
                                             <ComboBox x:Name="ThemePicker" Height="36" SelectionChanged="ThemePicker_SelectionChanged">
-                                                <ComboBoxItem Content="Obsidian"/><ComboBoxItem Content="Midnight"/><ComboBoxItem Content="Tokyo Night"/><ComboBoxItem Content="Nord"/><ComboBoxItem Content="Dracula"/><ComboBoxItem Content="Gruvbox"/><ComboBoxItem Content="Rosé Pine"/><ComboBoxItem Content="Sunset"/><ComboBoxItem Content="Forest"/><ComboBoxItem Content="Ocean"/><ComboBoxItem Content="Mono"/><ComboBoxItem Content="Cyberpunk"/><ComboBoxItem Content="Synthwave"/><ComboBoxItem Content="Neon City"/><ComboBoxItem Content="Matrix"/><ComboBoxItem Content="Tron"/><ComboBoxItem Content="Aurora"/><ComboBoxItem Content="Lavender"/><ComboBoxItem Content="Arctic"/><ComboBoxItem Content="Ember"/>
+                                                <ComboBoxItem Content="Obsidian"/><ComboBoxItem Content="Midnight"/><ComboBoxItem Content="Tokyo Night"/><ComboBoxItem Content="Nord"/><ComboBoxItem Content="Dracula"/><ComboBoxItem Content="Gruvbox"/><ComboBoxItem Content="Rosé Pine"/><ComboBoxItem Content="Sunset"/><ComboBoxItem Content="Forest"/><ComboBoxItem Content="Ocean"/><ComboBoxItem Content="Mono"/><ComboBoxItem Content="Cyberpunk"/><ComboBoxItem Content="Synthwave"/><ComboBoxItem Content="Neon City"/><ComboBoxItem Content="Matrix"/><ComboBoxItem Content="Tron"/><ComboBoxItem Content="Aurora"/><ComboBoxItem Content="Lavender"/><ComboBoxItem Content="Arctic"/><ComboBoxItem Content="Ember"/><ComboBoxItem Content="Paper"/><ComboBoxItem Content="Snow"/><ComboBoxItem Content="Solarized Light"/>
                                             </ComboBox>
                                         </StackPanel>
                                     </Border>
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel>
-                                            <TextBlock Text="CUSTOM PALETTE" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/>
+                                            <TextBlock Text="CUSTOM PALETTE" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/>
                                             <TextBlock Text="Fine-tune your colors" Style="{StaticResource Heading}" Margin="0,5,0,4"/>
                                             <TextBlock Text="Use HEX values in #RRGGBB format." Style="{StaticResource Muted}" Margin="0,0,0,12"/>
                                             <UniformGrid Columns="2">
@@ -353,7 +353,7 @@
 
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel>
-                                            <TextBlock Text="READING VERSION" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/>
+                                            <TextBlock Text="READING VERSION" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/>
                                             <Grid Margin="0,8,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -398,7 +398,7 @@
 
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel>
-                                            <TextBlock Text="FIND A PASSAGE" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/>
+                                            <TextBlock Text="FIND A PASSAGE" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/>
                                             <TextBox x:Name="BibleSearchInput" Margin="0,9,0,8" ToolTip="Search will be available after a licensed Bible text provider is connected."/>
                                             <Button Style="{StaticResource SecondaryButton}" Content="Search Bible" IsEnabled="False" HorizontalAlignment="Left"/>
                                             <TextBlock Text="Search is not active yet. It will use the selected translation's authorized text source." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,9,0,0"/>
@@ -407,18 +407,18 @@
 
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel>
-                                            <TextBlock Text="READING PANE" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/>
+                                            <TextBlock Text="READING PANE" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/>
                                             <TextBlock Text="Choose a passage to begin" Style="{StaticResource Heading}" Margin="0,8,0,5"/>
                                             <TextBlock Text="The Bible text provider has not been connected. Selah will not display copied or unlicensed Bible text." Style="{StaticResource Muted}" TextWrapping="Wrap"/>
                                             <Border Height="1" Background="{DynamicResource IslandBorderBrush}" Margin="0,13,0,10"/>
-                                            <TextBlock Text="SUPPORTED VERSIONS" Style="{StaticResource Muted}" FontSize="9" FontWeight="Bold"/>
-                                            <TextBlock Text="TB · Terjemahan Baru (LAI)     NIV · New International Version (Biblica)" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                            <TextBlock Text="SUPPORTED VERSIONS" Style="{StaticResource Muted}" FontSize="8.3" FontWeight="Bold"/>
+                                            <TextBlock Text="TB · Terjemahan Baru (LAI)     NIV · New International Version (Biblica)" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="8.6" TextWrapping="Wrap" Margin="0,6,0,0"/>
                                         </StackPanel>
                                     </Border>
 
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel>
-                                            <TextBlock Text="YOUR READING JOURNEY" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/>
+                                            <TextBlock Text="YOUR READING JOURNEY" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/>
                                             <TextBlock Text="Bookmarks, highlights, notes, reading plans, and reading history" Style="{StaticResource Heading}" Margin="0,8,0,5" TextWrapping="Wrap"/>
                                             <TextBlock Text="These will be stored locally in your Windows user profile. No reading activity is uploaded by this UI shell." Style="{StaticResource Muted}" TextWrapping="Wrap"/>
                                         </StackPanel>
@@ -427,32 +427,32 @@
                                 <StackPanel x:Name="WeatherPage" Visibility="Collapsed">
                                     <TextBlock Text="Weather" Style="{StaticResource PageTitle}"/>
                                     <TextBlock Text="A quick look outside." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
-                                    <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="LOCAL CONDITIONS" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/><TextBlock Text="Weather overview" Style="{StaticResource Heading}" Margin="0,7,0,5"/><TextBlock Text="Current conditions and hourly forecasts will appear here after a weather provider is connected." Style="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel></Border>
+                                    <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="LOCAL CONDITIONS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/><TextBlock Text="Weather overview" Style="{StaticResource Heading}" Margin="0,7,0,5"/><TextBlock Text="Current conditions and hourly forecasts will appear here after a weather provider is connected." Style="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel></Border>
                                 </StackPanel>
                                 <StackPanel x:Name="TrayPage" Visibility="Collapsed">
                                     <TextBlock Text="Drop zone" Style="{StaticResource PageTitle}"/>
                                     <TextBlock Text="Keep useful files close at hand." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
-                                    <Border Style="{StaticResource Card}"><StackPanel HorizontalAlignment="Center" Margin="0,15"><TextBlock Text="▣" Foreground="{DynamicResource AccentBrush}" FontSize="35" HorizontalAlignment="Center"/><TextBlock Text="Your temporary shelf" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,10,0,5"/><TextBlock Text="Drag-and-drop file support will be added with Windows shell integration." Style="{StaticResource Muted}" TextWrapping="Wrap" TextAlignment="Center"/></StackPanel></Border>
+                                    <Border Style="{StaticResource Card}"><StackPanel HorizontalAlignment="Center" Margin="0,15"><TextBlock Text="▣" Foreground="{DynamicResource AccentBrush}" FontSize="30.1" HorizontalAlignment="Center"/><TextBlock Text="Your temporary shelf" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,10,0,5"/><TextBlock Text="Drag-and-drop file support will be added with Windows shell integration." Style="{StaticResource Muted}" TextWrapping="Wrap" TextAlignment="Center"/></StackPanel></Border>
                                 </StackPanel>
                                 <StackPanel x:Name="ClipsPage" Visibility="Collapsed">
                                     <TextBlock Text="Clipboard" Style="{StaticResource PageTitle}"/>
                                     <TextBlock Text="Your copied snippets, kept private." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
-                                    <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="PRIVATE BY DESIGN" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/><TextBlock Text="Clipboard history" Style="{StaticResource Heading}" Margin="0,7,0,5"/><TextBlock Text="Clipboard capture is planned as an opt-in feature. Selah will not upload clipboard contents." Style="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel></Border>
+                                    <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="PRIVATE BY DESIGN" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/><TextBlock Text="Clipboard history" Style="{StaticResource Heading}" Margin="0,7,0,5"/><TextBlock Text="Clipboard capture is planned as an opt-in feature. Selah will not upload clipboard contents." Style="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel></Border>
                                 </StackPanel>
                                 <StackPanel x:Name="CalendarPage" Visibility="Collapsed">
                                     <TextBlock Text="Calendar" Style="{StaticResource PageTitle}"/>
                                     <TextBlock Text="See what is coming up." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
-                                    <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="UP NEXT" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/><TextBlock Text="Your schedule" Style="{StaticResource Heading}" Margin="0,7,0,5"/><TextBlock Text="Calendar events and due tasks will appear here after calendar permissions and provider integration are configured." Style="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel></Border>
+                                    <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="UP NEXT" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/><TextBlock Text="Your schedule" Style="{StaticResource Heading}" Margin="0,7,0,5"/><TextBlock Text="Calendar events and due tasks will appear here after calendar permissions and provider integration are configured." Style="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel></Border>
                                 </StackPanel>
                                 <StackPanel x:Name="SystemPage" Visibility="Collapsed">
                                     <TextBlock Text="System" Style="{StaticResource PageTitle}"/>
                                     <TextBlock Text="Useful controls and device status." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
-                                    <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="DEVICE OVERVIEW" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" FontWeight="Bold"/><TextBlock Text="System controls" Style="{StaticResource Heading}" Margin="0,7,0,5"/><TextBlock Text="Volume, output devices, device battery and laptop battery information will be integrated here." Style="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel></Border>
+                                    <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="DEVICE OVERVIEW" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold"/><TextBlock Text="System controls" Style="{StaticResource Heading}" Margin="0,7,0,5"/><TextBlock Text="Volume, output devices, device battery and laptop battery information will be integrated here." Style="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel></Border>
                                 </StackPanel>
                                 <StackPanel x:Name="MirrorPage" Visibility="Collapsed">
                                     <TextBlock Text="Mirror" Style="{StaticResource PageTitle}"/>
                                     <TextBlock Text="A private camera preview." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
-                                    <Border Style="{StaticResource Card}"><StackPanel HorizontalAlignment="Center" Margin="0,15"><TextBlock Text="◉" Foreground="{DynamicResource AccentBrush}" FontSize="35" HorizontalAlignment="Center"/><TextBlock Text="Camera preview" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,10,0,5"/><TextBlock Text="The camera will only activate after you explicitly open this feature." Style="{StaticResource Muted}" TextWrapping="Wrap" TextAlignment="Center"/></StackPanel></Border>
+                                    <Border Style="{StaticResource Card}"><StackPanel HorizontalAlignment="Center" Margin="0,15"><TextBlock Text="◉" Foreground="{DynamicResource AccentBrush}" FontSize="30.1" HorizontalAlignment="Center"/><TextBlock Text="Camera preview" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,10,0,5"/><TextBlock Text="The camera will only activate after you explicitly open this feature." Style="{StaticResource Muted}" TextWrapping="Wrap" TextAlignment="Center"/></StackPanel></Border>
                                 </StackPanel>
                             </Grid>
                     </ScrollViewer>
