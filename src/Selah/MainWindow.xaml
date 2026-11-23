@@ -459,7 +459,7 @@
                                 </StackPanel>
                             </Grid>
                     </ScrollViewer>
-                </Border>
+                </Grid>
             </Grid>
         </Grid>
     </Border>
