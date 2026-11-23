@@ -1,7 +1,7 @@
 <Window x:Class="Selah.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Selah" Width="112" Height="5" MinWidth="112" MaxWidth="660" MinHeight="5" MaxHeight="400"
+        Title="Selah" Width="112" Height="5" MinWidth="112" MaxWidth="820" MinHeight="5" MaxHeight="420"
         WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True"
         Background="Transparent" Topmost="True" ShowInTaskbar="False"
         WindowStartupLocation="Manual" Loaded="Window_Loaded" PreviewKeyDown="Window_PreviewKeyDown" MouseLeave="Window_MouseLeave" Focusable="True">
@@ -138,10 +138,10 @@
         </Style>
 
         <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource IslandBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
             <Setter Property="Padding" Value="6"/>
             <Setter Property="Margin" Value="0,0,0,4"/>
         </Style>
@@ -163,9 +163,9 @@
         </Style>
 
         <Style TargetType="TextBox">
-            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource IslandBorderBrush}"/>
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="6,3"/>
             <Setter Property="CaretBrush" Value="{DynamicResource AccentBrush}"/>
@@ -191,7 +191,7 @@
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Background="{DynamicResource IslandBackgroundBrush}"
             BorderBrush="{DynamicResource IslandBorderBrush}"
-            BorderThickness="0" CornerRadius="0,0,2.5,2.5" Padding="0"
+            BorderThickness="0" CornerRadius="0,0,28,28" Padding="0"
             ClipToBounds="True"
             MouseEnter="IslandSurface_MouseEnter"
             MouseLeave="IslandSurface_MouseLeave"
@@ -210,29 +210,36 @@
             </Grid>
 
             <!-- Expanded panel follows Nusa's compact 760px floating panel geometry. -->
-            <Grid x:Name="ExpandedContent" Visibility="Collapsed" Margin="10,6,10,8">
+            <Grid x:Name="ExpandedContent" Visibility="Collapsed" Margin="16,10,16,14">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="22"/>
-                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="12"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0" LastChildFill="True">
-                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                        
-                        <Button Style="{StaticResource TopNavButton}" Content="⚙" Tag="Themes" ToolTip="Appearance and themes" Click="Navigate_Click"/>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Gap="5">
+                        <TextBlock Text="◖" Foreground="#8E8E93" FontSize="12" VerticalAlignment="Center"/>
+                        <Slider x:Name="QuickVolumeSlider" Width="58" Minimum="0" Maximum="100" Value="50" IsEnabled="False" Height="16" VerticalAlignment="Center" ToolTip="System volume integration not connected"/>
+                        <Border Width="1" Height="17" Background="#1AFFFFFF" Margin="5,0"/>
+                        <TextBlock Text="◷" Foreground="#8E8E93" FontSize="12" VerticalAlignment="Center"/>
+                        <Button Style="{StaticResource TopNavButton}" Content="5m" Tag="5" Click="QuickTimer_Click" ToolTip="Start 5 minute focus timer"/>
+                        <Button Style="{StaticResource TopNavButton}" Content="15m" Tag="15" Click="QuickTimer_Click" ToolTip="Start 15 minute focus timer"/>
+                        <Button Style="{StaticResource TopNavButton}" Content="25m" Tag="25" Click="QuickTimer_Click" ToolTip="Start 25 minute focus timer"/>
+                        <Border Width="1" Height="17" Background="#1AFFFFFF" Margin="5,0"/>
+                        <TextBlock Text="☁  —°" Foreground="#8E8E93" FontSize="9" VerticalAlignment="Center" ToolTip="Weather provider not connected"/>
+                        <Border Width="1" Height="17" Background="#1AFFFFFF" Margin="5,0"/>
+                        <Button Style="{StaticResource TopNavButton}" Content="⌖" Tag="Pin" ToolTip="Pinning not implemented" IsEnabled="False"/>
+                        <Button Style="{StaticResource TopNavButton}" Content="⚙" Tag="Themes" ToolTip="Settings and themes" Click="Navigate_Click"/>
                     </StackPanel>
                     <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
                         <StackPanel x:Name="TopNavigation" Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button Style="{StaticResource TopNavButton}" Content="⌂" Tag="Home" ToolTip="Overview" Click="Navigate_Click"/>
-
-
-
+                            <Button Style="{StaticResource TopNavButton}" Content="⌂" Tag="Home" ToolTip="Home" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="♫" Tag="Music" ToolTip="Music" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="✓" Tag="Tasks" ToolTip="Tasks" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TopNavButton}" Content="◷" Tag="Focus" ToolTip="Focus" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TopNavButton}" Content="▤" Tag="Bible" ToolTip="Bible" Click="Navigate_Click"/>
-
                             <Button Style="{StaticResource TopNavButton}" Content="▣" Tag="Tray" ToolTip="Tray" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TopNavButton}" Content="▧" Tag="Clips" ToolTip="Clipboard" Click="Navigate_Click"/>
-
-
                             <Button Style="{StaticResource TopNavButton}" Content="◉" Tag="Mirror" ToolTip="Mirror" Click="Navigate_Click"/>
                         </StackPanel>
                     </ScrollViewer>
@@ -241,150 +248,91 @@
                     <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                         <Grid x:Name="PageHost">
                                 <Grid x:Name="HomePage">
-<Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="7"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-<DockPanel Grid.Row="0" Margin="1,0,1,0">
-<TextBlock x:Name="HomeDateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="9" FontWeight="SemiBold" DockPanel.Dock="Left"/>
-<TextBlock x:Name="HomeTaskCountText" Text="0 pending" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" HorizontalAlignment="Right"/>
-</DockPanel>
-<Grid Grid.Row="2">
-<Grid.RowDefinitions><RowDefinition Height="78"/><RowDefinition Height="5"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-<Grid.ColumnDefinitions><ColumnDefinition Width="2.05*"/><ColumnDefinition Width="1*"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
-<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,12,0">
-<Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-<Grid Grid.Row="0"><Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-<Border Width="38" Height="38" CornerRadius="6" Background="{DynamicResource CardBackgroundBrush}" ClipToBounds="True" VerticalAlignment="Center">
-<Grid><TextBlock Text="♫" Foreground="{DynamicResource AccentBrush}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/><Image x:Name="DashboardArtworkImage" Stretch="UniformToFill" Visibility="Collapsed"/></Grid>
+<Grid.ColumnDefinitions><ColumnDefinition Width="1.12*"/><ColumnDefinition Width="1.25*"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
+<Grid Grid.Column="0" Margin="0,0,16,0">
+<Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+<TextBlock Text="NOW PLAYING" Foreground="#34D399" FontSize="8" FontWeight="SemiBold" LetterSpacing="1"/>
+<Grid Grid.Row="1" Margin="0,10,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="68"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+<Border Width="60" Height="60" CornerRadius="16" Background="#18181B" ClipToBounds="True" VerticalAlignment="Top">
+<Grid><TextBlock Text="♫" Foreground="#8E8E93" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/><Image x:Name="DashboardArtworkImage" Stretch="UniformToFill" Visibility="Collapsed"/></Grid>
 </Border>
-<StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="6,0,4,0">
-<TextBlock x:Name="DashboardNowPlayingTitle" Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-<TextBlock x:Name="DashboardNowPlayingArtist" Text="Start audio on your PC" Style="{StaticResource Muted}" FontSize="8" Margin="0,2,0,0" TextTrimming="CharacterEllipsis"/>
-<TextBlock x:Name="DashboardPlayerStatusText" Text="Idle" Style="{StaticResource Muted}" FontSize="7.5" Margin="0,2,0,0"/>
+<StackPanel Grid.Column="1" Margin="10,2,0,0">
+<TextBlock x:Name="DashboardNowPlayingTitle" Text="Nothing playing" Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+<TextBlock x:Name="DashboardNowPlayingArtist" Text="Start audio on your PC" Foreground="#8E8E93" FontSize="9" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+<TextBlock x:Name="DashboardPlayerStatusText" Text="IDLE" Foreground="#8E8E93" FontSize="7.5" Margin="0,4,0,0"/>
+<StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+<Button x:Name="DashboardPreviousTrackButton" Style="{StaticResource TopNavButton}" Content="&#xE892;" FontFamily="Segoe MDL2 Assets" IsEnabled="False" Click="PreviousTrack_Click"/>
+<Button x:Name="DashboardPlayPauseButton" Style="{StaticResource TopNavButton}" Content="&#xE768;" FontFamily="Segoe MDL2 Assets" IsEnabled="False" Click="PlayPause_Click"/>
+<Button x:Name="DashboardNextTrackButton" Style="{StaticResource TopNavButton}" Content="&#xE893;" FontFamily="Segoe MDL2 Assets" IsEnabled="False" Click="NextTrack_Click"/>
 </StackPanel>
-<StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-<Button x:Name="DashboardPreviousTrackButton" Style="{StaticResource TransportButton}" Content="&#xE892;" Click="PreviousTrack_Click" IsEnabled="False" ToolTip="Previous" Width="23" Height="23"/>
-<Button x:Name="DashboardPlayPauseButton" Style="{StaticResource TransportButton}" Content="&#xE768;" Click="PlayPause_Click" IsEnabled="False" ToolTip="Play / pause" Width="27" Height="27" Margin="2,0"/>
-<Button x:Name="DashboardNextTrackButton" Style="{StaticResource TransportButton}" Content="&#xE893;" Click="NextTrack_Click" IsEnabled="False" ToolTip="Next" Width="23" Height="23"/>
 </StackPanel></Grid>
-<Slider x:Name="DashboardSeekBar" Grid.Row="1" Minimum="0" Maximum="100" Value="0" IsEnabled="False" Height="10" Margin="0,2,0,0" PreviewMouseLeftButtonUp="DashboardSeekBar_Seek" ToolTip="Seek"/>
+<Slider x:Name="DashboardSeekBar" Grid.Row="1" Minimum="0" Maximum="100" Value="0" IsEnabled="False" Height="12" VerticalAlignment="Bottom" Margin="0,0,0,0" PreviewMouseLeftButtonUp="DashboardSeekBar_Seek"/>
 </Grid>
-<StackPanel Grid.Row="0" Grid.Column="2" Margin="8,0,0,0">
-<DockPanel><TextBlock Text="✓  TASKS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="SemiBold"/><TextBlock x:Name="DashboardTaskSummaryText" Text="0 open" Foreground="{DynamicResource MutedTextBrush}" FontSize="7.5" HorizontalAlignment="Right"/></DockPanel>
-<DockPanel Margin="0,4,0,3"><Button DockPanel.Dock="Right" Style="{StaticResource ActionButton}" Content="＋" FontSize="11" Padding="5,0" Click="DashboardAddTask_Click" ToolTip="Add task" Margin="3,0,0,0"/><TextBox x:Name="DashboardTaskInput" Height="21" FontSize="8.5" VerticalContentAlignment="Center" ToolTip="New task"/></DockPanel>
-<ListBox x:Name="DashboardTaskList" MaxHeight="42" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" Background="Transparent">
-<ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,0,0,1"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Focusable" Value="False"/></Style></ListBox.ItemContainerStyle>
-<ListBox.ItemTemplate><DataTemplate><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><CheckBox IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/><TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="8" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/></Grid></DataTemplate></ListBox.ItemTemplate>
-</ListBox></StackPanel>
-<Border Grid.Row="1" Grid.ColumnSpan="3" Height="1" Background="{DynamicResource IslandBorderBrush}" Opacity="0.65"/>
-<Grid Grid.Row="2" Grid.Column="0" Margin="0,5,12,0"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-<TextBlock Text="◷  FOCUS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="SemiBold"/>
-<TextBlock x:Name="DashboardFocusTimeText" Grid.Row="1" Text="25:00" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="22" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"><Button Style="{StaticResource ActionButton}" Content="▶" Click="FocusStart_Click" Padding="6,1" ToolTip="Start"/><Button Style="{StaticResource SecondaryButton}" Content="Ⅱ" Click="FocusPause_Click" Padding="6,1" ToolTip="Pause"/><Button Style="{StaticResource SecondaryButton}" Content="↺" Click="FocusReset_Click" Padding="6,1" ToolTip="Reset"/></StackPanel>
+<Border Grid.Column="1" Width="1" HorizontalAlignment="Left" Background="#1AFFFFFF" Margin="0,5,0,5"/>
+<Grid Grid.Column="1" Margin="16,0,16,0">
+<Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+<DockPanel><TextBlock Text="AGENDA" Foreground="#8E8E93" FontSize="8" FontWeight="SemiBold" /><TextBlock x:Name="HomeDateText" Text="MONDAY, 23 NOVEMBER" Foreground="#FFFFFF" FontSize="9" FontWeight="SemiBold" DockPanel.Dock="Right"/></DockPanel>
+<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,10,0,10">
+<ItemsControl x:Name="HomeWeekStrip"><ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Rows="1" Columns="7"/></ItemsPanelTemplate></ItemsControl.ItemsPanel></ItemsControl>
+</StackPanel>
+<StackPanel Grid.Row="2" Margin="0,0,0,6">
+<TextBlock Text="UP NEXT" Foreground="#8E8E93" FontSize="8" FontWeight="SemiBold"/>
+<StackPanel Orientation="Horizontal" Margin="0,8,0,0"><Border Width="2" Height="28" Background="#F59E0B" CornerRadius="2"/><StackPanel Margin="8,0,0,0"><TextBlock Text="Tasks" Foreground="#FFFFFF" FontSize="10" FontWeight="SemiBold"/><TextBlock x:Name="HomeTaskCountText" Text="0 pending" Foreground="#8E8E93" FontSize="8"/></StackPanel></StackPanel>
+<StackPanel Orientation="Horizontal" Margin="0,8,0,0"><Border Width="2" Height="28" Background="#34D399" CornerRadius="2"/><StackPanel Margin="8,0,0,0"><TextBlock Text="Focus session" Foreground="#FFFFFF" FontSize="10" FontWeight="SemiBold"/><TextBlock x:Name="DashboardFocusTimeText" Text="25:00" Foreground="#8E8E93" FontSize="8" FontFamily="Segoe UI"/></StackPanel></StackPanel>
+</StackPanel>
+<StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom"><Button Style="{StaticResource TopNavButton}" Content="Open tasks" Tag="Tasks" Click="Navigate_Click"/><Button Style="{StaticResource TopNavButton}" Content="Start focus" Click="FocusStart_Click"/></StackPanel>
 </Grid>
-<Border Grid.Row="2" Grid.Column="1" Width="1" HorizontalAlignment="Left" Margin="0,8,0,5" Background="{DynamicResource IslandBorderBrush}" Opacity="0.65"/>
-<StackPanel Grid.Row="2" Grid.Column="1" Margin="10,7,8,0" VerticalAlignment="Center"><TextBlock Text="☼  WEATHER" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="SemiBold"/><TextBlock Text="—°" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="20" FontWeight="Light" Margin="0,3,0,0"/><TextBlock Text="Not connected" Foreground="{DynamicResource MutedTextBrush}" FontSize="8"/></StackPanel>
-<Border Grid.Row="2" Grid.Column="2" Width="1" HorizontalAlignment="Left" Margin="0,8,0,5" Background="{DynamicResource IslandBorderBrush}" Opacity="0.65"/>
-<StackPanel Grid.Row="2" Grid.Column="2" Margin="10,7,0,0" VerticalAlignment="Center"><TextBlock Text="▦  CALENDAR" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="SemiBold"/><TextBlock Text="No events" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="9" Margin="0,3,0,5"/><TextBlock Text="⌘  SYSTEM" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="SemiBold"/><TextBlock Text="Controls offline" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" Margin="0,2,0,0"/></StackPanel>
-</Grid></Grid>
+<Border Grid.Column="2" Width="1" HorizontalAlignment="Left" Background="#1AFFFFFF" Margin="0,5,0,5"/>
+<Grid Grid.Column="2" Margin="16,0,0,0">
+<Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+<Button Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource TopNavButton}" Content="◎" ToolTip="Camera integration not connected" IsEnabled="False"/>
+<StackPanel Grid.Row="1" Margin="0,2,0,0"><TextBlock Text="☁" Foreground="#8E8E93" FontSize="19"/><TextBlock Text="—°" Foreground="#FFFFFF" FontSize="30" FontWeight="Bold"/><TextBlock Text="Weather unavailable" Foreground="#8E8E93" FontSize="8"/><TextBlock Text="Connect a weather provider" Foreground="#8E8E93" FontSize="7" Margin="0,2,0,0"/></StackPanel>
+<UniformGrid Grid.Row="2" Rows="1" Columns="4" VerticalAlignment="Bottom" Margin="0,12,0,0">
+<StackPanel><TextBlock Text="NOW" Foreground="#8E8E93" FontSize="7"/><TextBlock Text="—" Foreground="#FFFFFF" FontSize="10"/><TextBlock Text="—%" Foreground="#60A5FA" FontSize="8"/></StackPanel>
+<StackPanel><TextBlock Text="+1h" Foreground="#8E8E93" FontSize="7"/><TextBlock Text="—" Foreground="#FFFFFF" FontSize="10"/><TextBlock Text="—%" Foreground="#60A5FA" FontSize="8"/></StackPanel>
+<StackPanel><TextBlock Text="+2h" Foreground="#8E8E93" FontSize="7"/><TextBlock Text="—" Foreground="#FFFFFF" FontSize="10"/><TextBlock Text="—%" Foreground="#60A5FA" FontSize="8"/></StackPanel>
+<StackPanel><TextBlock Text="+3h" Foreground="#8E8E93" FontSize="7"/><TextBlock Text="—" Foreground="#FFFFFF" FontSize="10"/><TextBlock Text="—%" Foreground="#60A5FA" FontSize="8"/></StackPanel>
+</UniformGrid></Grid>
+</Grid>
+<Grid x:Name="MusicPage" Visibility="Collapsed">
+<Grid.ColumnDefinitions><ColumnDefinition Width="150"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+<Border Width="136" Height="136" CornerRadius="18" Background="#18181B" ClipToBounds="True" VerticalAlignment="Center"><Grid><TextBlock Text="♫" Foreground="#8E8E93" FontSize="42" HorizontalAlignment="Center" VerticalAlignment="Center"/><Image x:Name="MediaArtworkImage" Stretch="UniformToFill" Visibility="Collapsed"/></Grid></Border>
+<StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+<TextBlock x:Name="PlayerStatusText" Text="WAITING FOR MEDIA" Foreground="#34D399" FontSize="8" FontWeight="SemiBold"/>
+<TextBlock x:Name="PlayerTitleText" Text="Nothing playing" Foreground="#FFFFFF" FontSize="17" FontWeight="Bold" TextWrapping="Wrap" Margin="0,7,0,2"/>
+<TextBlock x:Name="PlayerArtistText" Text="Open Spotify or another media app" Foreground="#8E8E93" FontSize="10"/>
+<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,5">
+<Button x:Name="PreviousTrackButton" Style="{StaticResource TopNavButton}" Content="&#xE892;" FontFamily="Segoe MDL2 Assets" FontSize="17" IsEnabled="False" Click="PreviousTrack_Click"/>
+<Button x:Name="PlayPauseButton" Style="{StaticResource TopNavButton}" Content="&#xE768;" FontFamily="Segoe MDL2 Assets" FontSize="20" IsEnabled="False" Click="PlayPause_Click" Margin="14,0"/>
+<Button x:Name="NextTrackButton" Style="{StaticResource TopNavButton}" Content="&#xE893;" FontFamily="Segoe MDL2 Assets" FontSize="17" IsEnabled="False" Click="NextTrack_Click"/>
+</StackPanel>
+<Slider x:Name="PlayerSeekBar" Minimum="0" Maximum="100" Value="0" IsEnabled="False" Height="14" PreviewMouseLeftButtonUp="PlayerSeekBar_Seek" KeyUp="PlayerSeekBar_KeyUp"/>
+<DockPanel><TextBlock x:Name="PlayerPositionText" Text="0:00" Foreground="#8E8E93" FontSize="8" DockPanel.Dock="Left"/><TextBlock x:Name="PlayerDurationText" Text="0:00" Foreground="#8E8E93" FontSize="8" DockPanel.Dock="Right"/></DockPanel>
+</StackPanel></Grid>
 
-                                <StackPanel x:Name="MusicPage" Visibility="Collapsed">
-                                    <Border Style="{StaticResource Card}" Padding="10" Margin="0">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid Grid.Row="0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="76"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <Border Width="68" Height="68" CornerRadius="9" Background="{DynamicResource IslandBackgroundBrush}" ClipToBounds="True">
-                                                    <Grid>
-                                                        <TextBlock Text="♫" Foreground="{DynamicResource AccentBrush}" FontSize="25" FontFamily="Segoe UI Symbol" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        <Image x:Name="MediaArtworkImage" Stretch="UniformToFill" Visibility="Collapsed"/>
-                                                    </Grid>
-                                                </Border>
-                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                                                    <TextBlock x:Name="PlayerTitleText" Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                                    <TextBlock x:Name="PlayerArtistText" Text="Open Spotify or another media app" Style="{StaticResource Muted}" FontSize="9.5" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
-                                                    <TextBlock x:Name="PlayerStatusText" Text="Waiting for a media session" Style="{StaticResource Muted}" FontSize="8.5" Margin="0,4,0,0"/>
-                                                </StackPanel>
-                                            </Grid>
-                                            <Grid Grid.Row="1" Margin="0,8,0,0">
-                                                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                                                <Slider x:Name="PlayerSeekBar" Grid.Row="0" Minimum="0" Maximum="100" Value="0" IsEnabled="False" VerticalAlignment="Center" Height="18" PreviewMouseLeftButtonUp="PlayerSeekBar_Seek" KeyUp="PlayerSeekBar_KeyUp"/>
-                                                <DockPanel Grid.Row="1" Margin="1,0,1,0">
-                                                    <TextBlock x:Name="PlayerPositionText" Text="0:00" Style="{StaticResource Muted}" FontSize="8" DockPanel.Dock="Left"/>
-                                                    <TextBlock x:Name="PlayerDurationText" Text="0:00" Style="{StaticResource Muted}" FontSize="8" DockPanel.Dock="Right"/>
-                                                </DockPanel>
-                                            </Grid>
-                                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,7,0,0">
-                                                <Button x:Name="PreviousTrackButton" Style="{StaticResource TransportButton}" Content="&#xE892;" Click="PreviousTrack_Click" IsEnabled="False" ToolTip="Previous track" Width="30" Height="30"/>
-                                                <Button x:Name="PlayPauseButton" Style="{StaticResource TransportButton}" Content="&#xE768;" Click="PlayPause_Click" IsEnabled="False" ToolTip="Play or pause" Width="36" Height="36" FontSize="15" Margin="9,0"/>
-                                                <Button x:Name="NextTrackButton" Style="{StaticResource TransportButton}" Content="&#xE893;" Click="NextTrack_Click" IsEnabled="False" ToolTip="Next track" Width="30" Height="30"/>
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-                                </StackPanel>
-                                
-                                <StackPanel x:Name="TasksPage" Visibility="Collapsed">
-                                    <Grid Margin="0,0,0,8">
-                                        <TextBlock Text="✓" Style="{StaticResource Heading}" VerticalAlignment="Center" ToolTip="Tasks"/>
-                                        <Border HorizontalAlignment="Right" VerticalAlignment="Center" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" Padding="8,4">
-                                            <TextBlock x:Name="TaskSummaryText" Text="0 open · 0 done" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="9" FontWeight="SemiBold"/>
-                                        </Border>
-                                    </Grid>
-                                    <Border Style="{StaticResource Card}" Padding="8" Margin="0,0,0,7">
-                                        <DockPanel LastChildFill="True">
-                                            <Button DockPanel.Dock="Right" Style="{StaticResource ActionButton}" Content="＋" FontSize="14" Padding="9,2" Click="AddTask_Click" Margin="8,0,0,0" ToolTip="Add task"/>
-                                            <TextBox x:Name="TaskInput" Height="26" VerticalContentAlignment="Center" ToolTip="What needs to get done?" />
-                                        </DockPanel>
-                                    </Border>
-                                    <DockPanel Margin="2,0,2,5">
-                                        
-                                        <TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" DockPanel.Dock="Right"/>
-                                    </DockPanel>
-                                    <ListBox x:Name="TaskList" MaxHeight="185" ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                                        <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem">
-                                                <Setter Property="Padding" Value="0"/>
-                                                <Setter Property="Margin" Value="0,0,0,4"/>
-                                                <Setter Property="Background" Value="Transparent"/>
-                                                <Setter Property="BorderThickness" Value="0"/>
-                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                                <Setter Property="Focusable" Value="False"/>
-                                            </Style>
-                                        </ListBox.ItemContainerStyle>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource IslandBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="8,5">
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="22"/><ColumnDefinition Width="*"/><ColumnDefinition Width="26"/></Grid.ColumnDefinitions>
-                                                        <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
-                                                        <TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="9.5" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Opacity" Value="1"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsCompleted}" Value="True">
-                                                                            <Setter Property="TextDecorations" Value="Strikethrough"/>
-                                                                            <Setter Property="Opacity" Value="0.48"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                        <Button Grid.Column="2" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="10" Foreground="{DynamicResource MutedTextBrush}" Background="Transparent" BorderThickness="0" Tag="{Binding}" Click="RemoveTask_Click" ToolTip="Delete task"/>
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                    <TextBlock x:Name="TaskEmptyText" Text="No tasks" Style="{StaticResource Muted}" TextAlignment="Center" Margin="0,6,0,0"/>
-                                </StackPanel>
+<StackPanel x:Name="TasksPage" Visibility="Collapsed">
+<DockPanel LastChildFill="True">
+<Button DockPanel.Dock="Left" Style="{StaticResource ActionButton}" Content="＋" FontSize="15" Padding="10,5" Click="AddTask_Click" ToolTip="Add task" Margin="0,0,8,0"/>
+<TextBox x:Name="TaskInput" Height="36" FontSize="11" VerticalContentAlignment="Center" ToolTip="What needs to get done?" />
+</DockPanel>
+<Grid Margin="0,12,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+<StackPanel Orientation="Horizontal">
+<Button Style="{StaticResource TopNavButton}" Content="In 30 min" Tag="30" Click="TaskSchedule_Click"/>
+<Button Style="{StaticResource TopNavButton}" Content="In 1 hour" Tag="60" Click="TaskSchedule_Click"/>
+<Button Style="{StaticResource TopNavButton}" Content="Tonight 20:00" Tag="Tonight" Click="TaskSchedule_Click"/>
+<Button Style="{StaticResource TopNavButton}" Content="Tomorrow 09:00" Tag="Tomorrow" Click="TaskSchedule_Click"/>
+</StackPanel>
+<StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"><Button Style="{StaticResource ActionButton}" Content="Focus 25m" Click="FocusStart_Click"/><TextBlock x:Name="TaskSummaryText" Text="0 open · 0 done" Foreground="#8E8E93" FontSize="8" VerticalAlignment="Center"/></StackPanel>
+</Grid>
+<DockPanel Margin="2,0,2,6"><TextBlock Text="YOUR TASKS" Foreground="#8E8E93" FontSize="8" FontWeight="SemiBold"/><TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="#8E8E93" FontSize="8" DockPanel.Dock="Right"/></DockPanel>
+<ListBox x:Name="TaskList" MaxHeight="190" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+<ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,0,0,5"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Focusable" Value="False"/></Style></ListBox.ItemContainerStyle>
+<ListBox.ItemTemplate><DataTemplate><Grid Margin="0,3"><Grid.ColumnDefinitions><ColumnDefinition Width="20"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><CheckBox IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/><TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="#FFFFFF" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/><Button Grid.Column="2" Content="×" Foreground="#8E8E93" Background="Transparent" BorderThickness="0" Tag="{Binding}" Click="RemoveTask_Click"/></Grid></DataTemplate></ListBox.ItemTemplate>
+</ListBox>
+<TextBlock x:Name="TaskEmptyText" Text="No tasks yet" Foreground="#8E8E93" FontSize="9" TextAlignment="Center" Margin="0,8,0,0"/>
+</StackPanel>
 
-                                <StackPanel x:Name="FocusPage" Visibility="Collapsed">
+<StackPanel x:Name="FocusPage" Visibility="Collapsed">
                                     
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel HorizontalAlignment="Center" Margin="0,8,0,8">
