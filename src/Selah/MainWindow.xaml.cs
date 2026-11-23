@@ -51,6 +51,7 @@ public partial class MainWindow : Window
     }
 
     private bool _isTransitioning;
+    private bool? _pendingExpandedState;
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -80,7 +81,14 @@ public partial class MainWindow : Window
 
     private void SetExpanded(bool expanded)
     {
-        if (_isExpanded == expanded || _isTransitioning) return;
+        if (_isTransitioning)
+        {
+            // Preserve the latest hover state if the pointer moves during an animation.
+            _pendingExpandedState = expanded;
+            return;
+        }
+
+        if (_isExpanded == expanded) return;
 
         _isExpanded = expanded;
         _isTransitioning = true;
@@ -89,7 +97,7 @@ public partial class MainWindow : Window
         {
             ExpandedContent.Visibility = Visibility.Visible;
             CompactContent.Visibility = Visibility.Collapsed;
-            ClockText.Text = DateTime.Now.ToString("ddd, dd MMM  •  HH:mm");
+            UpdateClockDisplay();
         }
         else
         {
@@ -130,6 +138,13 @@ public partial class MainWindow : Window
             {
                 CompactContent.Visibility = Visibility.Visible;
                 ExpandedContent.Visibility = Visibility.Collapsed;
+            }
+
+            if (_pendingExpandedState is bool pendingState)
+            {
+                _pendingExpandedState = null;
+                if (pendingState != _isExpanded)
+                    SetExpanded(pendingState);
             }
         };
 
