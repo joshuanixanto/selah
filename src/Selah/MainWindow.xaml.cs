@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Selah.Models;
+using Selah.Services;
 
 namespace Selah;
 
@@ -19,6 +21,7 @@ public partial class MainWindow : Window
     private const double TopOffset = 12;
     private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(420);
 
+    private readonly ThemeService _themeService = new();
     private readonly DispatcherTimer _clockTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _focusTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly List<StackPanel> _pages = [];
@@ -40,6 +43,11 @@ public partial class MainWindow : Window
         _focusTimer.Tick += FocusTimer_Tick;
         _clockTimer.Start();
         UpdateFocusDisplay();
+
+        var savedPalette = _themeService.LoadSaved();
+        var initialPalette = savedPalette ?? _themeService.GetPreset("Obsidian");
+        _themeService.Apply(initialPalette);
+        PopulatePaletteInputs(initialPalette);
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e) => PositionAtTopCenter(CompactWidth);
@@ -166,40 +174,64 @@ public partial class MainWindow : Window
     private void ThemePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (!IsLoaded || ThemePicker.SelectedItem is not ComboBoxItem item) return;
-        var name = item.Content?.ToString() ?? "Classic";
-        ApplyTheme(name);
+
+        var name = item.Content?.ToString() ?? "Obsidian";
+        var palette = _themeService.GetPreset(name);
+        _themeService.Apply(palette);
+        PopulatePaletteInputs(palette);
+        ThemeStatusText.Text = $"'{name}' preset applied. Adjust colors or save your own palette.";
     }
 
-    private void ApplyTheme(string name)
+    private void ApplyCustomTheme_Click(object sender, RoutedEventArgs e)
     {
-        var palette = name switch
-        {
-            "Midnight" => ("#10131F", "#1B2133", "#8EA7FF", "#AAB4CE", "#343D58"),
-            "Tokyo Night" => ("#16161E", "#24283B", "#7AA2F7", "#A9B1D6", "#343B59"),
-            "Nord" => ("#2E3440", "#3B4252", "#88C0D0", "#D8DEE9", "#4C566A"),
-            "Dracula" => ("#191A21", "#282A36", "#BD93F9", "#F8F8F2", "#44475A"),
-            "Gruvbox" => ("#1D2021", "#282828", "#FABD2F", "#EBDBB2", "#504945"),
-            "Rosé Pine" => ("#191724", "#26233A", "#C4A7E7", "#E0DEF4", "#403D52"),
-            "Sunset" => ("#211B25", "#33232D", "#FF9B85", "#F5D7CE", "#573A43"),
-            "Forest" => ("#101D1A", "#1B2B25", "#8CCF9B", "#D1E5D5", "#344C3D"),
-            "Ocean" => ("#101C28", "#1A2B3A", "#69C7D2", "#D1E7EC", "#31505D"),
-            "Mono" => ("#111111", "#242424", "#E5E5E5", "#D4D4D4", "#414141"),
-            _ => ("#171923", "#202431", "#A5B4FC", "#9CA3AF", "#303442")
-        };
+        var palette = BuildPaletteFromInputs();
+        if (palette is null) return;
 
-        SetBrush("IslandBackgroundBrush", palette.Item1);
-        SetBrush("CardBackgroundBrush", palette.Item2);
-        SetBrush("AccentBrush", palette.Item3);
-        SetBrush("MutedTextBrush", palette.Item4);
-        SetBrush("IslandBorderBrush", palette.Item5);
+        _themeService.Apply(palette);
+        ThemeStatusText.Text = "Custom palette preview applied. Save it to keep it after restarting Selah.";
     }
 
-    private void SetBrush(string key, string hex)
+    private void SaveCustomTheme_Click(object sender, RoutedEventArgs e)
     {
-        var color = (Color)ColorConverter.ConvertFromString(hex);
-        if (Application.Current.Resources[key] is SolidColorBrush brush)
-            brush.Color = color;
+        var palette = BuildPaletteFromInputs();
+        if (palette is null) return;
+
+        _themeService.Apply(palette);
+        if (_themeService.Save(palette))
+            ThemeStatusText.Text = "Custom palette saved locally. Selah will restore it on next launch.";
         else
-            Application.Current.Resources[key] = new SolidColorBrush(color);
+            ThemeStatusText.Text = "Could not save the palette. Check write access to your AppData folder.";
+    }
+
+    private ThemePalette? BuildPaletteFromInputs()
+    {
+        var palette = new ThemePalette(
+            "My Custom Palette",
+            BackgroundColorInput.Text.Trim(),
+            SurfaceColorInput.Text.Trim(),
+            PrimaryColorInput.Text.Trim(),
+            SecondaryColorInput.Text.Trim(),
+            TextColorInput.Text.Trim(),
+            MutedColorInput.Text.Trim(),
+            BorderColorInput.Text.Trim(),
+            "#55D6A5",
+            "#F5C76A",
+            "#FF6B78");
+
+        if (ThemeService.IsValid(palette)) return palette;
+
+        ThemeStatusText.Text = "Invalid HEX color. Every field must use the #RRGGBB format.";
+        return null;
+    }
+
+    private void PopulatePaletteInputs(ThemePalette palette)
+    {
+        BackgroundColorInput.Text = palette.Background;
+        SurfaceColorInput.Text = palette.Surface;
+        PrimaryColorInput.Text = palette.Primary;
+        SecondaryColorInput.Text = palette.Secondary;
+        TextColorInput.Text = palette.Text;
+        MutedColorInput.Text = palette.Muted;
+        BorderColorInput.Text = palette.Border;
     }
 }
