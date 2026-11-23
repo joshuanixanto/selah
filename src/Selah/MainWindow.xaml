@@ -4,7 +4,7 @@
         Title="Selah" Width="112" Height="5" MinWidth="112" MaxWidth="760" MinHeight="5" MaxHeight="400"
         WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True"
         Background="Transparent" Topmost="True" ShowInTaskbar="False"
-        WindowStartupLocation="Manual" Loaded="Window_Loaded" PreviewKeyDown="Window_PreviewKeyDown" Focusable="True">
+        WindowStartupLocation="Manual" Loaded="Window_Loaded" PreviewKeyDown="Window_PreviewKeyDown" MouseLeave="Window_MouseLeave" Focusable="True">
     <Window.Resources>
         <Style x:Key="NavButton" TargetType="Button">
             <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}"/>
@@ -161,7 +161,8 @@
             BorderThickness="0" CornerRadius="0,0,2.5,2.5" Padding="0"
             ClipToBounds="True"
             MouseEnter="IslandSurface_MouseEnter"
-            MouseLeave="IslandSurface_MouseLeave">
+            MouseLeave="IslandSurface_MouseLeave"
+            MouseLeftButtonDown="IslandSurface_MouseLeftButtonDown">
 
         <Grid>
             <!-- Hover state: show only the clock; the idle state stays as a thin notch. -->
@@ -228,8 +229,8 @@
                                                 </Border>
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                                                     <TextBlock Text="NOW PLAYING" Foreground="{DynamicResource MutedTextBrush}" FontSize="8.3" FontWeight="Bold" Margin="0,0,0,5"/>
-                                                    <TextBlock Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11.2" FontWeight="SemiBold"/>
-                                                    <TextBlock Text="Start audio on your PC" Style="{StaticResource Muted}" FontSize="8.6" TextWrapping="Wrap" Margin="0,3,0,0"/>
+                                                    <TextBlock x:Name="HomeNowPlayingTitle" Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11.2" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock x:Name="HomeNowPlayingArtist" Text="Start audio on your PC" Style="{StaticResource Muted}" FontSize="8.6" TextWrapping="Wrap" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
                                                 </StackPanel>
                                             </Grid>
                                         </StackPanel>
@@ -257,24 +258,28 @@
 
                                 <StackPanel x:Name="MusicPage" Visibility="Collapsed">
                                     <TextBlock Text="Now playing" Style="{StaticResource PageTitle}"/>
-                                    <TextBlock Text="Your audio, without leaving the flow." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
+                                    <TextBlock Text="Control the active Windows media session." Style="{StaticResource Muted}" Margin="0,0,0,12"/>
                                     <Border Style="{StaticResource Card}">
-                                        <StackPanel HorizontalAlignment="Center" Margin="0,12,0,12">
-                                            <Border Width="82" Height="82" CornerRadius="18" Background="{DynamicResource CardBackgroundBrush}" HorizontalAlignment="Center">
-                                                <TextBlock Text="♫" Foreground="{DynamicResource AccentBrush}" FontSize="31.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Grid Margin="2,6">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="68"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                            <Border Width="56" Height="56" CornerRadius="12" Background="{DynamicResource CardBackgroundBrush}" VerticalAlignment="Center">
+                                                <TextBlock Text="♫" Foreground="{DynamicResource AccentBrush}" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12.9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,13,0,4"/>
-                                            <TextBlock Text="No active media session detected." Style="{StaticResource Muted}" HorizontalAlignment="Center"/>
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
-                                                <Button Style="{StaticResource SecondaryButton}" Content="Previous" IsEnabled="False"/>
-                                                <Button Style="{StaticResource SecondaryButton}" Content="Play / Pause" IsEnabled="False"/>
-                                                <Button Style="{StaticResource SecondaryButton}" Content="Next" IsEnabled="False"/>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                <TextBlock x:Name="PlayerTitleText" Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock x:Name="PlayerArtistText" Text="Open Spotify, browser, or another media app" Style="{StaticResource Muted}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock x:Name="PlayerStatusText" Text="Waiting for a media session" Style="{StaticResource Muted}" FontSize="9" Margin="0,3,0,0"/>
                                             </StackPanel>
-                                        </StackPanel>
+                                        </Grid>
                                     </Border>
-                                    <TextBlock Text="Media controls will become available when a supported Windows media session is detected." Style="{StaticResource Muted}" TextWrapping="Wrap"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
+                                        <Button x:Name="PreviousTrackButton" Style="{StaticResource SecondaryButton}" Content="Previous" Click="PreviousTrack_Click" IsEnabled="False"/>
+                                        <Button x:Name="PlayPauseButton" Style="{StaticResource ActionButton}" Content="Play" Click="PlayPause_Click" IsEnabled="False"/>
+                                        <Button x:Name="NextTrackButton" Style="{StaticResource SecondaryButton}" Content="Next" Click="NextTrack_Click" IsEnabled="False" Margin="0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Controls use Windows Global System Media Transport Controls. Availability depends on the media app." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,10,0,0"/>
                                 </StackPanel>
-
+                                
                                 <StackPanel x:Name="TasksPage" Visibility="Collapsed">
                                     <TextBlock Text="Tasks" Style="{StaticResource PageTitle}"/>
                                     <TextBlock Text="Capture it. Then get it done." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
