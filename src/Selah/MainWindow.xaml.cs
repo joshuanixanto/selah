@@ -14,10 +14,10 @@ namespace Selah;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private const double IdleWidth = 148;
-    private const double IdleHeight = 6;
-    private const double HoverWidth = 190;
-    private const double HoverHeight = 30;
+    private const double IdleWidth = 112;
+    private const double IdleHeight = 5;
+    private const double HoverWidth = 126;
+    private const double HoverHeight = 26;
     private const double ExpandedWidth = 760;
     private const double ExpandedHeight = 190;
     private const double TopOffset = 0;
@@ -112,7 +112,7 @@ public partial class MainWindow : Window
         if (_isExpanded) return;
 
         _isHovered = hovered;
-        IslandSurface.CornerRadius = hovered ? new CornerRadius(0, 0, 9, 9) : new CornerRadius(0, 0, 3, 3);
+        IslandSurface.CornerRadius = hovered ? new CornerRadius(0, 0, 13, 13) : new CornerRadius(0, 0, 2.5, 2.5);
         CompactContent.Visibility = hovered ? Visibility.Visible : Visibility.Collapsed;
         ExpandedContent.Visibility = Visibility.Collapsed;
 
