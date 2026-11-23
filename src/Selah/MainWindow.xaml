@@ -201,7 +201,7 @@
                             <TextBlock x:Name="DateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource MutedTextBrush}" FontSize="7" HorizontalAlignment="Right"/>
                         </StackPanel>
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel x:Name="TopNavigation" Orientation="Horizontal" VerticalAlignment="Center">
                                 <Button Style="{StaticResource TopNavButton}" Content="⌂" Tag="Home" ToolTip="Overview" Click="Navigate_Click"/>
                                 <Button Style="{StaticResource TopNavButton}" Content="♫" Tag="Music" ToolTip="Now playing" Click="Navigate_Click"/>
                                 <Button Style="{StaticResource TopNavButton}" Content="✓" Tag="Tasks" ToolTip="Tasks" Click="Navigate_Click"/>
