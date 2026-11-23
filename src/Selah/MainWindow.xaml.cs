@@ -45,7 +45,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        _pages.AddRange(new[]
+        _pages.AddRange(new FrameworkElement[]
         {
             HomePage, MusicPage, TasksPage, FocusPage, BiblePage,
             WeatherPage, TrayPage, ClipsPage, CalendarPage, SystemPage, MirrorPage, ThemesPage
