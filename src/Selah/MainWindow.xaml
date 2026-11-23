@@ -271,7 +271,7 @@
                                                     <StackPanel><TextBlock Text="FOCUS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock Text="25 min" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10.3" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
                                                 </Border>
                                                 <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="9" Padding="9,6">
-                                                    <StackPanel><TextBlock Text="TASKS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10.3" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
+                                                    <StackPanel><TextBlock Text="TASKS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock x:Name="HomeTaskCountText" Text="0 pending" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10.3" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
                                                 </Border>
                                             </StackPanel>
                                         </StackPanel>
