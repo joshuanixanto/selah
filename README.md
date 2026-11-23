@@ -10,7 +10,9 @@ Selah takes interaction and feature inspiration from [Nusa](https://github.com/H
 - Compact and expanded states with spring-style resize/position transitions.
 - Section navigation for Home, Music, Tasks, Focus, Prayer, Quran, Weather, Tray, Clips, Calendar, System, Mirror, and Themes.
 - Local task entry and a 25-minute focus timer.
-- Eleven selectable color themes.
+- Twenty visual theme presets across premium, minimal, cyber/neon, and ambient styles.
+- Custom semantic color palette editor with live preview and local JSON persistence.
+- Theme presets and custom palettes use shared WPF resource tokens for consistent application-wide updates.
 
 Some sections currently provide their UI shell only. Windows media sessions, calendar, audio devices, location, weather, camera, clipboard history, drag-and-drop tray, prayer calculations, and Quran content are separate integrations and are not represented as completed features yet.
 
@@ -29,9 +31,11 @@ dotnet run --project .\src\Selah\Selah.csproj
 
 ## Project structure
 
-- `src/Selah/App.xaml`: global theme resources.
-- `src/Selah/MainWindow.xaml`: island layout and feature section views.
-- `src/Selah/MainWindow.xaml.cs`: window transitions, navigation, local task interaction, focus timer, and theme selection.
+- `src/Selah/App.xaml`: shared semantic theme resource tokens.
+- `src/Selah/Models/ThemePalette.cs`: strongly typed theme palette model.
+- `src/Selah/Services/ThemeService.cs`: preset lookup, resource updates, validation, and custom palette persistence.
+- `src/Selah/MainWindow.xaml`: island layout, feature views, and theme customizer UI.
+- `src/Selah/MainWindow.xaml.cs`: window transitions, navigation, local task interaction, focus timer, and theme UI event handlers.
 
 ## Roadmap
 
