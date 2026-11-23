@@ -23,11 +23,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ButtonSurface" Property="Background" Value="#252B39"/>
+                                <Setter TargetName="ButtonSurface" Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ButtonSurface" Property="Background" Value="#30394A"/>
+                                <Setter TargetName="ButtonSurface" Property="Background" Value="{DynamicResource IslandBorderBrush}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.45"/>
@@ -56,11 +56,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="TabSurface" Property="Background" Value="#252A33"/>
+                                <Setter TargetName="TabSurface" Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="TabSurface" Property="Background" Value="#343B47"/>
+                                <Setter TargetName="TabSurface" Property="Background" Value="{DynamicResource IslandBorderBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -101,7 +101,7 @@
 
         <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ActionButton}">
             <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
-            <Setter Property="Background" Value="#292F3D"/>
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
         </Style>
 
         <Style x:Key="Card" TargetType="Border">
@@ -130,7 +130,7 @@
         </Style>
 
         <Style TargetType="TextBox">
-            <Setter Property="Background" Value="#151923"/>
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource IslandBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -140,7 +140,7 @@
         </Style>
 
         <Style TargetType="ComboBox">
-            <Setter Property="Background" Value="#202635"/>
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource IslandBorderBrush}"/>
             <Setter Property="Padding" Value="8,5"/>
@@ -223,7 +223,7 @@
                                         <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="220">
                                             <Grid>
                                                 <Grid.ColumnDefinitions><ColumnDefinition Width="74"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                                                <Border Width="64" Height="64" CornerRadius="12" Background="#17191F" VerticalAlignment="Center">
+                                                <Border Width="64" Height="64" CornerRadius="12" Background="{DynamicResource CardBackgroundBrush}" VerticalAlignment="Center">
                                                     <TextBlock Text="♫" FontSize="23.2" Foreground="{DynamicResource MutedTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
@@ -238,10 +238,10 @@
                                             <TextBlock Text="TODAY" Foreground="{DynamicResource AccentBrush}" FontSize="8.3" FontWeight="Bold" Margin="0,0,0,8"/>
                                             <TextBlock x:Name="HomeDateText" Text="MONDAY, 23 NOVEMBER" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="13.8" FontWeight="SemiBold" Margin="0,0,0,10"/>
                                             <StackPanel Orientation="Horizontal">
-                                                <Border Background="#20232C" CornerRadius="9" Padding="9,6" Margin="0,0,7,0">
+                                                <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="9" Padding="9,6" Margin="0,0,7,0">
                                                     <StackPanel><TextBlock Text="FOCUS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock Text="25 min" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10.3" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
                                                 </Border>
-                                                <Border Background="#20232C" CornerRadius="9" Padding="9,6">
+                                                <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="9" Padding="9,6">
                                                     <StackPanel><TextBlock Text="TASKS" Foreground="{DynamicResource MutedTextBrush}" FontSize="8" FontWeight="Bold"/><TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="10.3" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
                                                 </Border>
                                             </StackPanel>
@@ -260,7 +260,7 @@
                                     <TextBlock Text="Your audio, without leaving the flow." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel HorizontalAlignment="Center" Margin="0,12,0,12">
-                                            <Border Width="82" Height="82" CornerRadius="18" Background="#252D3C" HorizontalAlignment="Center">
+                                            <Border Width="82" Height="82" CornerRadius="18" Background="{DynamicResource CardBackgroundBrush}" HorizontalAlignment="Center">
                                                 <TextBlock Text="♫" Foreground="{DynamicResource AccentBrush}" FontSize="31.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
                                             <TextBlock Text="Nothing playing" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12.9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,13,0,4"/>
@@ -296,7 +296,7 @@
                                     <TextBlock Text="One thing at a time." Style="{StaticResource Muted}" Margin="0,0,0,15"/>
                                     <Border Style="{StaticResource Card}">
                                         <StackPanel HorizontalAlignment="Center" Margin="0,15,0,15">
-                                            <Border Width="58" Height="58" CornerRadius="18" Background="#202B39" HorizontalAlignment="Center">
+                                            <Border Width="58" Height="58" CornerRadius="18" Background="{DynamicResource CardBackgroundBrush}" HorizontalAlignment="Center">
                                                 <TextBlock Text="◷" Foreground="{DynamicResource AccentBrush}" FontSize="24.1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
                                             <TextBlock x:Name="FocusTimeText" Text="25:00" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="44.7" FontWeight="Light" HorizontalAlignment="Center" Margin="0,12,0,4"/>
