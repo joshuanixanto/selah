@@ -34,7 +34,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _focusTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _mediaRefreshTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private readonly MediaPlayerService _mediaPlayer = new();
-    private readonly List<StackPanel> _pages = [];
+    private readonly List<FrameworkElement> _pages = [];
     private readonly ObservableCollection<TaskItem> _tasks = [];
     private bool _isExpanded;
     private bool _isHovered;
@@ -505,12 +505,10 @@ public partial class MainWindow : Window
                 ? (string.IsNullOrWhiteSpace(media!.Artist) ? media!.AppName : media!.Artist + " · " + media!.AppName)
                 : "Open Spotify, browser, or another media app";
             PlayerStatusText.Text = hasSession ? media!.PlaybackStatus : "Waiting for a media session";
-            HomeNowPlayingTitle.Text = hasSession ? media!.Title : "Nothing playing";
             DashboardNowPlayingTitle.Text = hasSession ? media!.Title : "Nothing playing";
-            HomeNowPlayingArtist.Text = hasSession
+            DashboardNowPlayingArtist.Text = hasSession
                 ? (string.IsNullOrWhiteSpace(media!.Artist) ? media!.AppName : media!.Artist)
                 : "Start audio on your PC";
-            DashboardNowPlayingArtist.Text = HomeNowPlayingArtist.Text;
             DashboardPlayerStatusText.Text = hasSession ? media!.PlaybackStatus : "Idle";
 
             var artwork = CreateArtwork(media?.ArtworkBytes);
