@@ -7,9 +7,9 @@ Selah takes interaction and feature inspiration from [Nusa](https://github.com/H
 ## Current implementation
 
 - Borderless, transparent, always-on-top island window.
-- Three island states: a 148×6 px idle notch, a 190×30 px hover pill, and a 620×590 px expanded dashboard.
-- Hover reveals the compact clock pill; clicking the pill opens the dashboard. Leaving the island returns it to the idle notch.
-- Section navigation for Home, Music, Tasks, Focus, Bible, Weather, Tray, Clips, Calendar, System, Mirror, and Themes.
+- Three island states: a 148×6 px idle notch, a 190×30 px hover pill, and a 760 px-wide expanded panel whose height adapts by section (270–450 px).
+- Hover reveals the compact clock pill; clicking the pill opens the panel. Leaving the island returns it to the idle notch. The expanded panel uses a compact horizontal navigation bar, tighter spacing, and section-specific heights.
+- Compact horizontal icon navigation for Home, Music, Tasks, Focus, Bible, Weather, Tray, Clips, Calendar, System, Mirror, and Themes, with a Nusa-inspired top-tab layout.
 - Local task entry and a 25-minute focus timer.
 - Twenty visual theme presets across premium, minimal, cyber/neon, and ambient styles.
 - Custom semantic color palette editor with live preview and local JSON persistence.
