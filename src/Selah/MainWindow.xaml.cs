@@ -500,7 +500,9 @@ public partial class MainWindow : Window
             PreviousTrackButton.IsEnabled = hasSession;
             PlayPauseButton.IsEnabled = hasSession;
             NextTrackButton.IsEnabled = hasSession;
-            PlayPauseButton.Content = hasSession && media!.IsPlaying ? "\\uE769" : "\\uE768";
+            PlayPauseButton.Content = hasSession && media!.IsPlaying
+                ? ((char)0xE769).ToString()
+                : ((char)0xE768).ToString();
 
             if (hasSession && media!.Duration > TimeSpan.Zero)
             {
