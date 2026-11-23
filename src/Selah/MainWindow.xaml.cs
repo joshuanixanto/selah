@@ -143,11 +143,19 @@ public partial class MainWindow : Window
             return;
         }
 
+        var currentWidth = ActualWidth;
+        var currentHeight = ActualHeight;
+        var currentLeft = Left;
+
         if (_isTransitioning)
         {
+            // Freeze the current rendered geometry before replacing an in-flight animation.
             BeginAnimation(WidthProperty, null);
             BeginAnimation(HeightProperty, null);
             BeginAnimation(LeftProperty, null);
+            Width = currentWidth;
+            Height = currentHeight;
+            Left = currentLeft;
         }
 
         _isTransitioning = true;
@@ -158,7 +166,17 @@ public partial class MainWindow : Window
         var heightAnimation = new DoubleAnimation(Height, targetHeight, duration) { EasingFunction = easing };
         var leftAnimation = new DoubleAnimation(Left, targetLeft, duration) { EasingFunction = easing };
 
-        heightAnimation.Completed += (_, _) => _isTransitioning = false;
+        heightAnimation.Completed += (_, _) =>
+        {
+            // Persist final bounds as base values, then release the animation clocks.
+            Width = targetWidth;
+            Height = targetHeight;
+            Left = targetLeft;
+            BeginAnimation(WidthProperty, null);
+            BeginAnimation(HeightProperty, null);
+            BeginAnimation(LeftProperty, null);
+            _isTransitioning = false;
+        };
         BeginAnimation(WidthProperty, widthAnimation);
         BeginAnimation(HeightProperty, heightAnimation);
         BeginAnimation(LeftProperty, leftAnimation);
