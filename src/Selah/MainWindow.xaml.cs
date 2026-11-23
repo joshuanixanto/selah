@@ -24,7 +24,7 @@ public partial class MainWindow : Window
     private const double IdleHeight = 5;
     private const double HoverWidth = 126;
     private const double HoverHeight = 26;
-    private const double ExpandedWidth = 720;
+    private const double ExpandedWidth = 620;
     private const double ExpandedHeight = 190;
     private const double TopOffset = 0;
     private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(360);
@@ -45,11 +45,18 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        _pages.AddRange(new FrameworkElement[]
-        {
-            HomePage, MusicPage, TasksPage, FocusPage, BiblePage,
-            WeatherPage, TrayPage, ClipsPage, CalendarPage, SystemPage, MirrorPage, ThemesPage
-        });
+        _pages.Add(HomePage);
+        _pages.Add(MusicPage);
+        _pages.Add(TasksPage);
+        _pages.Add(FocusPage);
+        _pages.Add(BiblePage);
+        _pages.Add(WeatherPage);
+        _pages.Add(TrayPage);
+        _pages.Add(ClipsPage);
+        _pages.Add(CalendarPage);
+        _pages.Add(SystemPage);
+        _pages.Add(MirrorPage);
+        _pages.Add(ThemesPage);
         TaskList.ItemsSource = _tasks;
         DashboardTaskList.ItemsSource = _tasks;
         _tasks.CollectionChanged += Tasks_CollectionChanged;
@@ -245,7 +252,7 @@ public partial class MainWindow : Window
 
     private static double GetExpandedHeight(string pageName) => pageName switch
     {
-        "Home" => 350,
+        "Home" => 220,
         "Music" => 220,
         "Tasks" => 270,
         "Focus" => 210,
