@@ -17,10 +17,10 @@ public sealed partial class NaturalLanguageTaskParser
     [GeneratedRegex(@"\s+in\s+(\d+)\s*h\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex InHoursRegex();
 
-    [GeneratedRegex(@"\s+tonight(?:\s+(?:at\s+)?)?(\d{1,2})(?::(\d{2}))?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"\s+tonight(?:\s+(?:at\s+)?(\d{1,2})(?::(\d{2}))?)?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex TonightRegex();
 
-    [GeneratedRegex(@"\s+tomorrow(?:\s+(?:at\s+)?)?(\d{1,2})(?::(\d{2}))?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"\s+tomorrow(?:\s+(?:at\s+)?(\d{1,2})(?::(\d{2}))?)?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex TomorrowRegex();
 
     public ParsedTask Parse(string input, DateTime? now = null)
