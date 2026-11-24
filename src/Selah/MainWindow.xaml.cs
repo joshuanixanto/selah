@@ -8,6 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Selah.Models;
 using Selah.Services;
@@ -135,21 +136,13 @@ public partial class MainWindow : Window
     private void CollapseTimer_Tick(object? sender, EventArgs e)
     {
         _collapseTimer.Stop();
-        if (_isPinned || Keyboard.FocusedElement is TextBoxBase || FindVisualChildren<ComboBox>(this).Any(c => c.IsDropDownOpen)) return;
+        if (_isPinned || Keyboard.FocusedElement is TextBoxBase || ThemePicker.IsDropDownOpen || SettingsTranslationCombo.IsDropDownOpen) return;
         _isExpanded = false;
         ExpandedContent.Visibility = Visibility.Collapsed;
         SetCompactState(false);
     }
 
-    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
-    {
-        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            var child = VisualTreeHelper.GetChild(parent, i);
-            if (child is T typed) yield return typed;
-            foreach (var nested in FindVisualChildren<T>(child)) yield return nested;
-        }
-    }
+
 
     private void IslandSurface_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
@@ -217,6 +210,8 @@ public partial class MainWindow : Window
         CompactContent.Visibility = showPill ? Visibility.Visible : Visibility.Collapsed;
         ExpandedContent.Visibility = Visibility.Collapsed;
         IslandSurface.CornerRadius = showPill ? new CornerRadius(0, 0, 20, 20) : new CornerRadius(0, 0, 8, 8);
+        AnimateContentOpacity(CompactContent, showPill ? 1 : 0, animate);
+        AnimateContentOpacity(ExpandedContent, 0, animate);
         AnimateWindowBounds(showPill ? (live ? LiveWidth : HoverWidth) : IdleWidth, showPill ? (live ? LiveHeight : HoverHeight) : IdleHeight, animate);
     }
 
@@ -233,6 +228,8 @@ public partial class MainWindow : Window
             CompactContent.Visibility = Visibility.Collapsed;
             AlertContent.Visibility = Visibility.Collapsed;
             ExpandedContent.Visibility = Visibility.Visible;
+            AnimateContentOpacity(ExpandedContent, 1, true);
+            AnimateContentOpacity(CompactContent, 0, true);
             UpdateClockDisplay();
             AnimateWindowBounds(ExpandedWidth, GetExpandedHeightForCurrentPage());
             return;
@@ -240,6 +237,15 @@ public partial class MainWindow : Window
 
         ExpandedContent.Visibility = Visibility.Collapsed;
         SetCompactState(IslandSurface.IsMouseOver);
+    }
+
+    private static void AnimateContentOpacity(UIElement element, double target, bool animate)
+    {
+        if (!animate) { element.Opacity = target; return; }
+        element.BeginAnimation(OpacityProperty, new DoubleAnimation(element.Opacity, target, TimeSpan.FromMilliseconds(150))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        });
     }
 
     private void AnimateWindowBounds(double targetWidth, double targetHeight, bool animate = true)
@@ -798,6 +804,7 @@ public partial class MainWindow : Window
                 PlayerPositionText.Text = "0:00";
                 PlayerDurationText.Text = "0:00";
             }
+            UpdateCompactLiveContent();
         }
         catch (Exception ex)
         {
@@ -832,6 +839,7 @@ public partial class MainWindow : Window
         CompactContent.Visibility = Visibility.Collapsed;
         ExpandedContent.Visibility = Visibility.Collapsed;
         AlertContent.Visibility = Visibility.Visible;
+        AnimateContentOpacity(AlertContent, 1, true);
         IslandSurface.CornerRadius = new CornerRadius(0, 0, 24, 24);
         AnimateWindowBounds(AlertWidth, AlertHeight);
     }
@@ -840,6 +848,7 @@ public partial class MainWindow : Window
     {
         _alertActive = false;
         AlertContent.Visibility = Visibility.Collapsed;
+        AnimateContentOpacity(AlertContent, 0, true);
         SetCompactState(false);
     }
 
