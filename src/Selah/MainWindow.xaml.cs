@@ -32,6 +32,10 @@ public partial class MainWindow : Window
     private readonly ThemeService _themeService = new();
     private readonly TaskService _taskService = new();
     private readonly NaturalLanguageTaskParser _taskParser = new();
+    private readonly BibleService _bibleService = new();
+    private BibleVerse? _currentBibleVerse;
+    private int _bibleStreak;
+    private DateOnly? _lastBibleReadDate;
     private readonly DispatcherTimer _clockTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _focusTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _mediaRefreshTimer = new() { Interval = TimeSpan.FromSeconds(2) };
@@ -89,6 +93,7 @@ public partial class MainWindow : Window
         PositionAtTopCenter();
         UpdateClockDisplay();
         await LoadTasksAsync();
+        await InitializeBibleAsync();
         SetActiveNavigation("Home");
         SetCompactState(false, animate: false);
         await InitializeMediaAsync();
@@ -580,6 +585,81 @@ public partial class MainWindow : Window
 
         ThemeStatusText.Text = "Invalid HEX color. Every field must use the #RRGGBB format.";
         return null;
+    }
+
+
+    private async Task InitializeBibleAsync()
+    {
+        try
+        {
+            var verse = await _bibleService.GetRandomAsync();
+            if (verse is not null)
+                DisplayBibleVerse(verse, "VERSE OF THE DAY");
+        }
+        catch (Exception ex)
+        {
+            BibleVerseText.Text = "The offline verse library could not be loaded.";
+            BibleVerseReferenceText.Text = ex.Message;
+        }
+    }
+
+    private void DisplayBibleVerse(BibleVerse verse, string category)
+    {
+        _currentBibleVerse = verse;
+        BibleVerseKindText.Text = category;
+        BibleVerseText.Text = verse.Text;
+        BibleVerseReferenceText.Text = verse.Reference + "  ·  WEB";
+        BibleVerseText.Opacity = 0;
+        BibleVerseText.BeginAnimation(OpacityProperty,
+            new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            });
+    }
+
+    private async void BibleRandom_Click(object sender, RoutedEventArgs e)
+    {
+        var verse = await _bibleService.GetRandomAsync();
+        if (verse is not null)
+            DisplayBibleVerse(verse, "RANDOM VERSE");
+    }
+
+    private async void BibleSearch_Click(object sender, RoutedEventArgs e)
+    {
+        var results = await _bibleService.SearchAsync(BibleSearchInput.Text);
+        BibleSearchResults.ItemsSource = results;
+        if (results.Count == 0)
+            BibleCopyStatusText.Text = "No offline match";
+        else
+            BibleCopyStatusText.Text = $"{results.Count} result(s)";
+    }
+
+    private async void BibleSearchInput_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key != System.Windows.Input.Key.Enter) return;
+        BibleSearch_Click(sender, e);
+    }
+
+    private void BibleSearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (BibleSearchResults.SelectedItem is BibleVerse verse)
+            DisplayBibleVerse(verse, "SEARCH RESULT");
+    }
+
+    private void BibleCopy_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentBibleVerse is null) return;
+        Clipboard.SetText($"\u201c{_currentBibleVerse.Text}\u201d \u2014 {_currentBibleVerse.Reference} (WEB)");
+        BibleCopyStatusText.Text = "Copied";
+    }
+
+    private void BibleMarkRead_Click(object sender, RoutedEventArgs e)
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        if (_lastBibleReadDate == today) return;
+        _bibleStreak = _lastBibleReadDate == today.AddDays(-1) ? _bibleStreak + 1 : 1;
+        _lastBibleReadDate = today;
+        BibleStreakText.Text = $"{_bibleStreak}-day streak";
     }
 
     private async Task InitializeMediaAsync()
