@@ -439,11 +439,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <TextBlock Text="{Binding BookId, StringFormat={}{0} {1}:{2}}" Foreground="#FFFFFF" FontSize="8" FontWeight="SemiBold">
-                                <TextBlock.DataContext>
-                                    <Binding/>
-                                </TextBlock.DataContext>
-                            </TextBlock>
+                            <TextBlock Text="{Binding Reference}" Foreground="#FFFFFF" FontSize="8" FontWeight="SemiBold"/>
                             <TextBlock Text="{Binding Text}" Foreground="#8E8E93" FontSize="7" TextWrapping="Wrap" MaxHeight="28"/>
                         </StackPanel>
                     </DataTemplate>
