@@ -83,6 +83,10 @@ public partial class MainWindow : Window
         DashboardTaskList.ItemsSource = _tasks;
         HomeWeekStrip.ItemsSource = _weekDates;
         _tasks.CollectionChanged += Tasks_CollectionChanged;
+        BibleReminderToggle.Checked += ReminderToggle_Changed;
+        BibleReminderToggle.Unchecked += ReminderToggle_Changed;
+        BibleReminderTimeInput.TextChanged += ReminderTime_TextChanged;
+        SettingsReminderTimeInput.TextChanged += ReminderTime_TextChanged;
 
         _clockTimer.Tick += (_, _) => UpdateClockDisplay();
         _collapseTimer.Tick += CollapseTimer_Tick;
@@ -311,12 +315,12 @@ public partial class MainWindow : Window
 
     private static double GetExpandedHeight(string pageName) => pageName switch
     {
-        "Home" => 270,
-        "Music" => 205,
-        "Tasks" => 285,
+        "Home" => 250,
+        "Music" => 240,
+        "Tasks" => 265,
         "Focus" => 210,
-        "Bible" => 330,
-        "Themes" => 350,
+        "Bible" => 265,
+        "Themes" => 265,
         "Settings" => 250,
         "Weather" => 170,
         "Tray" => 170,
@@ -542,6 +546,7 @@ public partial class MainWindow : Window
         _focusTimer.Start();
         FocusStatusText.Text = "Focus session in progress.";
         DashboardFocusTimeText.ToolTip = "Focus session running";
+        UpdateCompactLiveContent();
     }
 
     private void FocusPause_Click(object sender, RoutedEventArgs e)
@@ -550,6 +555,7 @@ public partial class MainWindow : Window
         _focusTimer.Stop();
         FocusStatusText.Text = "Session paused.";
         DashboardFocusTimeText.ToolTip = "Focus session paused";
+        UpdateCompactLiveContent();
     }
 
     private void FocusReset_Click(object sender, RoutedEventArgs e)
@@ -865,6 +871,31 @@ public partial class MainWindow : Window
     }
 
     private void ContextPin_Click(object sender, RoutedEventArgs e) => _isPinned = !_isPinned;
+
+    private void PinToggle_Click(object sender, RoutedEventArgs e)
+    {
+        _isPinned = !_isPinned;
+        if (sender is Button button)
+        {
+            button.Foreground = _isPinned ? Brushes.White : Brushes.Gray;
+            button.ToolTip = _isPinned ? "Island pinned" : "Pin / unpin island";
+        }
+    }
+
+    private void ReminderToggle_Changed(object sender, RoutedEventArgs e)
+    {
+        _reminderSettings.IsEnabled = BibleReminderToggle.IsChecked == true;
+        _reminderScheduler.CheckNow();
+    }
+
+    private void ReminderTime_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is not TextBox input || !TimeOnly.TryParse(input.Text, out var time)) return;
+        _reminderSettings.ReminderTime = time;
+        if (BibleReminderTimeInput.Text != time.ToString("HH:mm")) BibleReminderTimeInput.Text = time.ToString("HH:mm");
+        if (SettingsReminderTimeInput.Text != time.ToString("HH:mm")) SettingsReminderTimeInput.Text = time.ToString("HH:mm");
+        _reminderScheduler.CheckNow();
+    }
 
     private void ContextSettings_Click(object sender, RoutedEventArgs e)
     {
