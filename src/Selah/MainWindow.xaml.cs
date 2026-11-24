@@ -30,6 +30,8 @@ public partial class MainWindow : Window
     private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(360);
 
     private readonly ThemeService _themeService = new();
+    private readonly TaskService _taskService = new();
+    private readonly NaturalLanguageTaskParser _taskParser = new();
     private readonly DispatcherTimer _clockTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _focusTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _mediaRefreshTimer = new() { Interval = TimeSpan.FromSeconds(2) };
@@ -43,6 +45,7 @@ public partial class MainWindow : Window
     private bool _focusRunning;
     private int _focusRemainingSeconds = 25 * 60;
     private DateTime? _selectedTaskDueAt;
+    private bool _isLoadingTasks;
 
     public MainWindow()
     {
@@ -85,6 +88,7 @@ public partial class MainWindow : Window
         IslandSurface.Height = double.NaN;
         PositionAtTopCenter();
         UpdateClockDisplay();
+        await LoadTasksAsync();
         SetActiveNavigation("Home");
         SetCompactState(false, animate: false);
         await InitializeMediaAsync();
@@ -307,8 +311,6 @@ public partial class MainWindow : Window
             ["Home"] = ("⌂", "Home"),
             ["Music"] = ("♫", "Music"),
             ["Tasks"] = ("✓", "Tasks"),
-            ["Music"] = ("♫", "Music"),
-            ["Tasks"] = ("✓", "Tasks"),
             ["Focus"] = ("◷", "Focus"),
             ["Bible"] = ("▤", "Bible"),
             ["Weather"] = ("☼", "Weather"),
@@ -386,7 +388,11 @@ public partial class MainWindow : Window
         if (title.Length == 0)
             return;
 
-        var task = new TaskItem(title, _selectedTaskDueAt);
+        var parsed = _taskParser.Parse(title);
+        if (string.IsNullOrWhiteSpace(parsed.Title))
+            return;
+
+        var task = new TaskItem(parsed.Title, _selectedTaskDueAt ?? parsed.DueAt);
         _selectedTaskDueAt = null;
         TaskInput.ToolTip = "What needs to get done?";
         task.PropertyChanged += Task_PropertyChanged;
@@ -394,6 +400,45 @@ public partial class MainWindow : Window
         input.Clear();
         UpdateTaskCount();
         input.Focus();
+    }
+
+
+    private async Task LoadTasksAsync()
+    {
+        _isLoadingTasks = true;
+        try
+        {
+            var loaded = await _taskService.LoadAsync();
+            foreach (var task in _tasks)
+                task.PropertyChanged -= Task_PropertyChanged;
+            _tasks.Clear();
+            foreach (var task in loaded)
+            {
+                task.PropertyChanged += Task_PropertyChanged;
+                _tasks.Add(task);
+            }
+        }
+        catch (Exception ex)
+        {
+            TaskEmptyText.Text = "Could not load tasks: " + ex.Message;
+        }
+        finally
+        {
+            _isLoadingTasks = false;
+            UpdateTaskCount();
+        }
+    }
+
+    private async Task SaveTasksAsync()
+    {
+        try
+        {
+            await _taskService.SaveAsync(_tasks);
+        }
+        catch (Exception ex)
+        {
+            TaskEmptyText.Text = "Could not save tasks: " + ex.Message;
+        }
     }
 
     private void RemoveTask_Click(object sender, RoutedEventArgs e)
@@ -406,15 +451,20 @@ public partial class MainWindow : Window
         UpdateTaskCount();
     }
 
-    private void Tasks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private async void Tasks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         UpdateTaskCount();
+        if (!_isLoadingTasks)
+            await SaveTasksAsync();
     }
 
     private void Task_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(TaskItem.IsCompleted))
+        {
             UpdateTaskCount();
+            _ = SaveTasksAsync();
+        }
     }
 
     private void UpdateTaskCount()
