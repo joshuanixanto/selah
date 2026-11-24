@@ -637,7 +637,10 @@ public partial class MainWindow : Window
     private async void BibleSearchInput_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (e.Key != System.Windows.Input.Key.Enter) return;
-        BibleSearch_Click(sender, e);
+        var results = await _bibleService.SearchAsync(BibleSearchInput.Text);
+        BibleSearchResults.ItemsSource = results;
+        BibleCopyStatusText.Text = results.Count == 0 ? "No offline match" : $"{results.Count} result(s)";
+        e.Handled = true;
     }
 
     private void BibleSearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
