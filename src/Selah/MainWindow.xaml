@@ -244,11 +244,11 @@
                             <Button Style="{StaticResource TabPillStyle}" Content="⌂" Tag="Home" ToolTip="Home" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TabPillStyle}" Content="♫" Tag="Music" ToolTip="Music" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TabPillStyle}" Content="✓" Tag="Tasks" ToolTip="Tasks" Click="Navigate_Click"/>
-                            <Button Style="{StaticResource TopNavButton}" Content="◷" Tag="Focus" ToolTip="Focus" Click="Navigate_Click"/>
+
                             <Button Style="{StaticResource TabPillStyle}" Content="▤" Tag="Bible" ToolTip="Bible" Click="Navigate_Click"/>
-                            <Button Style="{StaticResource TopNavButton}" Content="▣" Tag="Tray" ToolTip="Tray" Click="Navigate_Click"/>
-                            <Button Style="{StaticResource TopNavButton}" Content="▧" Tag="Clips" ToolTip="Clipboard" Click="Navigate_Click"/>
-                            <Button Style="{StaticResource TopNavButton}" Content="◉" Tag="Mirror" ToolTip="Mirror" Click="Navigate_Click"/>
+
+
+
                         </StackPanel>
                     </ScrollViewer>
                 </DockPanel>
