@@ -191,22 +191,30 @@
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Background="{DynamicResource IslandBackgroundBrush}"
             BorderBrush="{DynamicResource IslandBorderBrush}"
-            BorderThickness="0" CornerRadius="0,0,28,28" Padding="0"
+            BorderThickness="0,0,1,1" CornerRadius="0,0,28,28" Padding="0"
             ClipToBounds="True"
             MouseEnter="IslandSurface_MouseEnter"
             MouseLeave="IslandSurface_MouseLeave"
             MouseLeftButtonDown="IslandSurface_MouseLeftButtonDown">
+        <Border.ContextMenu><ContextMenu Style="{StaticResource NusaContextMenuStyle}"><MenuItem Header="Pin / Unpin Island" Style="{StaticResource NusaMenuItemStyle}" Click="ContextPin_Click"/><MenuItem Header="Random Bible Verse" Style="{StaticResource NusaMenuItemStyle}" Click="BibleRandom_Click"/><MenuItem Header="Settings" Style="{StaticResource NusaMenuItemStyle}" Click="ContextSettings_Click"/><Separator Background="#333337"/><MenuItem Header="Exit Selah" Style="{StaticResource NusaMenuItemStyle}" Click="ContextExit_Click"/></ContextMenu></Border.ContextMenu>
 
         <Grid>
             <!-- Hover state: show only the clock; the idle state stays as a thin notch. -->
-            <Grid x:Name="CompactContent" Visibility="Collapsed" IsHitTestVisible="False">
-                <TextBlock x:Name="CompactClockText"
-                           Text="14:51"
-                           Foreground="{DynamicResource PrimaryTextBrush}"
-                           FontSize="8.6"
-                           FontWeight="SemiBold"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+            <Grid x:Name="CompactContent" Visibility="Collapsed" IsHitTestVisible="False" Margin="12,4">
+                <Grid x:Name="DormantContent"><TextBlock x:Name="CompactClockText" Text="14:51" Foreground="#FFFFFF" FontSize="8.6" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Grid>
+                <Grid x:Name="CompactLiveContent" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="22"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <Border Width="22" Height="22" CornerRadius="6" Background="#18181B" ClipToBounds="True"><Image x:Name="CompactArtworkImage" Stretch="UniformToFill"/></Border>
+                    <TextBlock x:Name="CompactTrackTitle" Grid.Column="1" Text="Selah" Foreground="#FFFFFF" FontSize="9" VerticalAlignment="Center" Margin="8,0" TextTrimming="CharacterEllipsis"/>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0"><Border x:Name="EqBar1" Width="2" Height="6" Background="#34D399" CornerRadius="1" Margin="1"/><Border x:Name="EqBar2" Width="2" Height="11" Background="#34D399" CornerRadius="1" Margin="1"/><Border x:Name="EqBar3" Width="2" Height="8" Background="#34D399" CornerRadius="1" Margin="1"/></StackPanel>
+                    <Border Grid.Column="3" Background="#18181B" CornerRadius="999" Padding="8,4"><TextBlock x:Name="CompactStatusText" Text="28°" Foreground="#FFFFFF" FontSize="8"/></Border>
+                </Grid>
+            </Grid>
+            <Grid x:Name="AlertContent" Visibility="Collapsed" Margin="16,10">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="36"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <Border Width="36" Height="36" CornerRadius="18" Background="#18181B"><TextBlock Text="▤" Foreground="#34D399" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0"><TextBlock Text="Time for your daily Bible reading" Foreground="#FFFFFF" FontSize="10" FontWeight="Bold"/><TextBlock x:Name="AlertVerseReferenceText" Text="Open Selah to read today's verse" Foreground="#8E8E93" FontSize="8" Margin="0,3,0,0"/></StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"><Button Style="{StaticResource ActionButton}" Content="Read Now" Click="ReminderReadNow_Click" Padding="9,5"/><Button Style="{StaticResource SecondaryButton}" Content="Dismiss" Click="ReminderDismiss_Click" Padding="9,5"/></StackPanel>
             </Grid>
 
             <!-- Expanded panel follows Nusa's compact 760px floating panel geometry. -->
@@ -219,7 +227,7 @@
                 <DockPanel Grid.Row="0" LastChildFill="True">
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="◖" Foreground="#8E8E93" FontSize="12" VerticalAlignment="Center"/>
-                        <Slider x:Name="QuickVolumeSlider" Width="58" Minimum="0" Maximum="100" Value="50" IsEnabled="False" Height="16" VerticalAlignment="Center" ToolTip="System volume integration not connected"/>
+                        <Slider Style="{StaticResource NusaSliderStyle}" x:Name="QuickVolumeSlider" Width="58" Minimum="0" Maximum="100" Value="50" IsEnabled="False" Height="16" VerticalAlignment="Center" ToolTip="System volume integration not connected"/>
                         <Border Width="1" Height="17" Background="#1AFFFFFF" Margin="5,0"/>
                         <TextBlock Text="◷" Foreground="#8E8E93" FontSize="12" VerticalAlignment="Center"/>
                         <Button Style="{StaticResource TopNavButton}" Content="5m" Tag="5" Click="QuickTimer_Click" ToolTip="Start 5 minute focus timer"/>
@@ -233,11 +241,11 @@
                     </StackPanel>
                     <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
                         <StackPanel x:Name="TopNavigation" Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button Style="{StaticResource TopNavButton}" Content="⌂" Tag="Home" ToolTip="Home" Click="Navigate_Click"/>
-                            <Button Style="{StaticResource TopNavButton}" Content="♫" Tag="Music" ToolTip="Music" Click="Navigate_Click"/>
-                            <Button Style="{StaticResource TopNavButton}" Content="✓" Tag="Tasks" ToolTip="Tasks" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TabPillStyle}" Content="⌂" Tag="Home" ToolTip="Home" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TabPillStyle}" Content="♫" Tag="Music" ToolTip="Music" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TabPillStyle}" Content="✓" Tag="Tasks" ToolTip="Tasks" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TopNavButton}" Content="◷" Tag="Focus" ToolTip="Focus" Click="Navigate_Click"/>
-                            <Button Style="{StaticResource TopNavButton}" Content="▤" Tag="Bible" ToolTip="Bible" Click="Navigate_Click"/>
+                            <Button Style="{StaticResource TabPillStyle}" Content="▤" Tag="Bible" ToolTip="Bible" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TopNavButton}" Content="▣" Tag="Tray" ToolTip="Tray" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TopNavButton}" Content="▧" Tag="Clips" ToolTip="Clipboard" Click="Navigate_Click"/>
                             <Button Style="{StaticResource TopNavButton}" Content="◉" Tag="Mirror" ToolTip="Mirror" Click="Navigate_Click"/>
@@ -320,7 +328,7 @@
 <StackPanel x:Name="TasksPage" Visibility="Collapsed">
 <DockPanel LastChildFill="True">
 <Button DockPanel.Dock="Left" Style="{StaticResource ActionButton}" Content="＋" FontSize="15" Padding="10,5" Click="AddTask_Click" ToolTip="Add task" Margin="0,0,8,0"/>
-<TextBox x:Name="TaskInput" Height="36" FontSize="11" VerticalContentAlignment="Center" ToolTip="What needs to get done?" />
+<TextBox Style="{StaticResource PillTextBoxStyle}" Tag="＋" x:Name="TaskInput" Height="36" FontSize="11" VerticalContentAlignment="Center" ToolTip="What needs to get done?" />
 </DockPanel>
 <Grid Margin="0,12,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
 <StackPanel Orientation="Horizontal">
@@ -334,7 +342,7 @@
 <DockPanel Margin="2,0,2,6"><TextBlock Text="YOUR TASKS" Foreground="#8E8E93" FontSize="8" FontWeight="SemiBold"/><TextBlock x:Name="TaskCountText" Text="0 pending" Foreground="#8E8E93" FontSize="8" DockPanel.Dock="Right"/></DockPanel>
 <ListBox x:Name="TaskList" MaxHeight="190" ScrollViewer.VerticalScrollBarVisibility="Hidden">
 <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,0,0,5"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Focusable" Value="False"/></Style></ListBox.ItemContainerStyle>
-<ListBox.ItemTemplate><DataTemplate><Grid Margin="0,3"><Grid.ColumnDefinitions><ColumnDefinition Width="20"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><CheckBox IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/><TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="#FFFFFF" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="2" Text="{Binding DueAt, StringFormat={}{0:HH:mm}}" Foreground="#8E8E93" FontSize="8" VerticalAlignment="Center" Margin="8,0"/><Button Grid.Column="3" Content="×" Foreground="#8E8E93" Background="Transparent" BorderThickness="0" Tag="{Binding}" Click="RemoveTask_Click"/></Grid></DataTemplate></ListBox.ItemTemplate>
+<ListBox.ItemTemplate><DataTemplate><Grid Margin="0,3"><Grid.ColumnDefinitions><ColumnDefinition Width="20"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><CheckBox Style="{StaticResource CircleCheckBoxStyle}" IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/><TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="#FFFFFF" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="2" Text="{Binding DueAt, StringFormat={}{0:HH:mm}}" Foreground="#8E8E93" FontSize="8" VerticalAlignment="Center" Margin="8,0"/><Button Grid.Column="3" Content="×" Foreground="#8E8E93" Background="Transparent" BorderThickness="0" Tag="{Binding}" Click="RemoveTask_Click"/></Grid></DataTemplate></ListBox.ItemTemplate>
 </ListBox>
 <TextBlock x:Name="TaskEmptyText" Text="No tasks yet" Foreground="#8E8E93" FontSize="9" TextAlignment="Center" Margin="0,8,0,0"/>
 </StackPanel>
@@ -364,7 +372,7 @@
                                         <StackPanel>
                                             
                                             
-                                            <ComboBox x:Name="ThemePicker" Height="27" SelectionChanged="ThemePicker_SelectionChanged">
+                                            <ComboBox Style="{StaticResource NusaComboBoxStyle}" x:Name="ThemePicker" Height="27" SelectionChanged="ThemePicker_SelectionChanged">
                                                 <ComboBoxItem Content="Obsidian"/><ComboBoxItem Content="Midnight"/><ComboBoxItem Content="Tokyo Night"/><ComboBoxItem Content="Nord"/><ComboBoxItem Content="Dracula"/><ComboBoxItem Content="Gruvbox"/><ComboBoxItem Content="Rosé Pine"/><ComboBoxItem Content="Sunset"/><ComboBoxItem Content="Forest"/><ComboBoxItem Content="Ocean"/><ComboBoxItem Content="Mono"/><ComboBoxItem Content="Cyberpunk"/><ComboBoxItem Content="Synthwave"/><ComboBoxItem Content="Neon City"/><ComboBoxItem Content="Matrix"/><ComboBoxItem Content="Tron"/><ComboBoxItem Content="Aurora"/><ComboBoxItem Content="Lavender"/><ComboBoxItem Content="Arctic"/><ComboBoxItem Content="Ember"/><ComboBoxItem Content="Paper"/><ComboBoxItem Content="Snow"/><ComboBoxItem Content="Solarized Light"/>
                                             </ComboBox>
                                         </StackPanel>
@@ -420,7 +428,7 @@
             <TextBlock Text="SCRIPTURE SEARCH" Foreground="#8E8E93" FontSize="8" FontWeight="Bold" Margin="0,0,0,7"/>
             <DockPanel>
                 <Button DockPanel.Dock="Right" Style="{StaticResource ActionButton}" Content="⌕" Click="BibleSearch_Click" Padding="9,5" Margin="5,0,0,0"/>
-                <TextBox x:Name="BibleSearchInput" Height="31" FontSize="9" VerticalContentAlignment="Center"
+                <TextBox Style="{StaticResource PillTextBoxStyle}" Tag="⌕" x:Name="BibleSearchInput" Height="31" FontSize="9" VerticalContentAlignment="Center"
                          ToolTip="Search a reference (John 3:16) or keyword (peace)" KeyDown="BibleSearchInput_KeyDown"/>
             </DockPanel>
             <ListBox x:Name="BibleSearchResults" Height="112" Margin="0,7,0,9"
@@ -452,7 +460,7 @@
             </DockPanel>
             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                 <CheckBox x:Name="BibleReminderToggle" Content="Reminder" IsChecked="True" Foreground="#FFFFFF" FontSize="8" VerticalAlignment="Center"/>
-                <TextBox x:Name="BibleReminderTimeInput" Text="07:30" Width="54" Height="23" FontSize="8" Margin="10,0,0,0" VerticalContentAlignment="Center"/>
+                <TextBox Style="{StaticResource PillTextBoxStyle}" x:Name="BibleReminderTimeInput" Text="07:30" Width="54" Height="23" FontSize="8" Margin="10,0,0,0" VerticalContentAlignment="Center"/>
                 <Button Style="{StaticResource SecondaryButton}" Content="Mark as read" Click="BibleMarkRead_Click" Padding="8,4" Margin="8,0,0,0"/>
             </StackPanel>
         </StackPanel>
@@ -483,6 +491,25 @@
                                     
                                     <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="⌘ System" Style="{StaticResource Heading}"/><TextBlock Text="Controls not connected" Style="{StaticResource Muted}" FontSize="9"/></StackPanel></Border>
                                 </StackPanel>
+                                <Grid x:Name="SettingsPage" Visibility="Collapsed" Margin="8,4">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="1"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                        <TextBlock Text="CONTENT &amp; PREFERENCES" Foreground="#34D399" FontSize="8" FontWeight="Bold" Margin="0,0,0,10"/>
+                                        <TextBlock Text="Bible translation" Foreground="#8E8E93" FontSize="9"/>
+                                        <ComboBox x:Name="SettingsTranslationCombo" Style="{StaticResource NusaComboBoxStyle}" Margin="0,4,0,10"><ComboBoxItem Content="WEB"/><ComboBoxItem Content="ESV"/><ComboBoxItem Content="NIV"/><ComboBoxItem Content="TB"/><ComboBoxItem Content="KJV"/></ComboBox>
+                                        <TextBlock Text="Weather location" Foreground="#8E8E93" FontSize="9"/>
+                                        <TextBox x:Name="WeatherLocationInput" Style="{StaticResource PillTextBoxStyle}" Tag="⌕" ToolTip="City name" Margin="0,4,0,10"/>
+                                        <TextBlock Text="Reminder time" Foreground="#8E8E93" FontSize="9"/>
+                                        <TextBox x:Name="SettingsReminderTimeInput" Style="{StaticResource PillTextBoxStyle}" Text="07:30" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Background="#1AFFFFFF" Margin="0,4"/>
+                                    <StackPanel Grid.Column="2" Margin="16,0,0,0">
+                                        <TextBlock Text="ISLAND BEHAVIOR" Foreground="#34D399" FontSize="8" FontWeight="Bold" Margin="0,0,0,10"/>
+                                        <DockPanel Margin="0,6"><TextBlock Text="Show Compact Live Pill" Foreground="#FFFFFF" FontSize="9" VerticalAlignment="Center"/><ToggleButton x:Name="CompactPillToggle" Style="{StaticResource NusaToggleSwitchStyle}" IsChecked="True" DockPanel.Dock="Right"/></DockPanel>
+                                        <DockPanel Margin="0,6"><TextBlock Text="Auto-Collapse on Mouse Leave" Foreground="#FFFFFF" FontSize="9" VerticalAlignment="Center"/><ToggleButton x:Name="AutoCollapseToggle" Style="{StaticResource NusaToggleSwitchStyle}" IsChecked="True" DockPanel.Dock="Right"/></DockPanel>
+                                        <DockPanel Margin="0,6"><TextBlock Text="Launch on Windows Startup" Foreground="#FFFFFF" FontSize="9" VerticalAlignment="Center"/><ToggleButton x:Name="StartupToggle" Style="{StaticResource NusaToggleSwitchStyle}" IsChecked="False" DockPanel.Dock="Right"/></DockPanel>
+                                    </StackPanel>
+                                </Grid>
                                 <StackPanel x:Name="MirrorPage" Visibility="Collapsed">
                                     
                                     
