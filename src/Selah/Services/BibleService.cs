@@ -7,7 +7,7 @@ namespace Selah.Services;
 /// Offline-first scripture lookup backed by the World English Bible (public domain).
 /// This service intentionally does not present WEB text as TB or NIV.
 /// </summary>
-public sealed class BibleService
+public sealed partial class BibleService
 {
     private readonly string _dataPath;
     private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
