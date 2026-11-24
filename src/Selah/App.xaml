@@ -6,6 +6,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/ClassicTheme.xaml"/>
+                <ResourceDictionary Source="Themes/NusaControls.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <!-- Legacy aliases retained for the current MainWindow and ThemeService. -->
             <SolidColorBrush x:Key="IslandBackgroundBrush" Color="#000000"/>
