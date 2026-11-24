@@ -22,12 +22,16 @@ public partial class MainWindow : Window
 {
     private const double IdleWidth = 112;
     private const double IdleHeight = 5;
-    private const double HoverWidth = 126;
-    private const double HoverHeight = 26;
-    private const double ExpandedWidth = 800;
-    private const double ExpandedHeight = 190;
+    private const double HoverWidth = 340;
+    private const double HoverHeight = 38;
+    private const double LiveWidth = 340;
+    private const double LiveHeight = 38;
+    private const double AlertWidth = 460;
+    private const double AlertHeight = 72;
+    private const double ExpandedWidth = 780;
+    private const double ExpandedHeight = 250;
     private const double TopOffset = 0;
-    private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(360);
+    private static readonly TimeSpan TransitionDuration = TimeSpan.FromMilliseconds(240);
 
     private readonly ThemeService _themeService = new();
     private readonly TaskService _taskService = new();
@@ -40,6 +44,13 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _focusTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _mediaRefreshTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private readonly MediaPlayerService _mediaPlayer = new();
+    private readonly ReminderSettings _reminderSettings = new();
+    private readonly ReminderSchedulerService _reminderScheduler;
+    private readonly DispatcherTimer _collapseTimer = new() { Interval = TimeSpan.FromMilliseconds(400) };
+    private bool _mediaIsPlaying;
+    private bool _isPinned;
+    private bool _alertActive;
+    private string _previousPageName = "Home";
     private readonly List<FrameworkElement> _pages = [];
     private readonly ObservableCollection<TaskItem> _tasks = [];
     private readonly ObservableCollection<DateTime> _weekDates = [];
@@ -66,12 +77,16 @@ public partial class MainWindow : Window
         _pages.Add(SystemPage);
         _pages.Add(MirrorPage);
         _pages.Add(ThemesPage);
+        _pages.Add(SettingsPage);
         TaskList.ItemsSource = _tasks;
         DashboardTaskList.ItemsSource = _tasks;
         HomeWeekStrip.ItemsSource = _weekDates;
         _tasks.CollectionChanged += Tasks_CollectionChanged;
 
         _clockTimer.Tick += (_, _) => UpdateClockDisplay();
+        _collapseTimer.Tick += CollapseTimer_Tick;
+        _reminderScheduler = new ReminderSchedulerService(_reminderSettings);
+        _reminderScheduler.ReminderDue += ReminderScheduler_ReminderDue;
         _focusTimer.Tick += FocusTimer_Tick;
         _mediaRefreshTimer.Tick += async (_, _) => await RefreshMediaAsync();
         _clockTimer.Start();
@@ -97,26 +112,43 @@ public partial class MainWindow : Window
         SetActiveNavigation("Home");
         SetCompactState(false, animate: false);
         await InitializeMediaAsync();
+        _reminderScheduler.Start();
     }
 
     private void IslandSurface_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (!_isExpanded)
-            SetCompactState(true);
+        _collapseTimer.Stop();
+        if (!_isExpanded && !_alertActive) SetCompactState(true);
     }
 
-    private void IslandSurface_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    private void IslandSurface_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) => ScheduleAutoCollapse();
+
+    private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) => ScheduleAutoCollapse();
+
+    private void ScheduleAutoCollapse()
     {
-        if (!_isExpanded)
-            SetCompactState(false);
+        if (_isPinned || !AutoCollapseToggle.IsChecked.GetValueOrDefault() || _alertActive) return;
+        _collapseTimer.Stop();
+        _collapseTimer.Start();
     }
 
-    private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    private void CollapseTimer_Tick(object? sender, EventArgs e)
     {
-        if (_isExpanded)
-            SetExpanded(false);
-        else
-            SetCompactState(false);
+        _collapseTimer.Stop();
+        if (_isPinned || Keyboard.FocusedElement is TextBoxBase || FindVisualChildren<ComboBox>(this).Any(c => c.IsDropDownOpen)) return;
+        _isExpanded = false;
+        ExpandedContent.Visibility = Visibility.Collapsed;
+        SetCompactState(false);
+    }
+
+    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+    {
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T typed) yield return typed;
+            foreach (var nested in FindVisualChildren<T>(child)) yield return nested;
+        }
     }
 
     private void IslandSurface_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -142,11 +174,11 @@ public partial class MainWindow : Window
 
     private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
-        if (e.Key != System.Windows.Input.Key.Escape || !_isExpanded)
-            return;
-
-        SetExpanded(false);
-        e.Handled = true;
+        if (e.Key != System.Windows.Input.Key.Escape) return;
+        if (Keyboard.FocusedElement is TextBoxBase) { Keyboard.ClearFocus(); e.Handled = true; return; }
+        _collapseTimer.Stop();
+        if (_alertActive) { DismissReminderAlert(); e.Handled = true; return; }
+        if (_isExpanded) { SetExpanded(false); e.Handled = true; }
     }
 
     private void ExpandButton_Click(object sender, RoutedEventArgs e) => SetExpanded(!_isExpanded);
@@ -177,13 +209,15 @@ public partial class MainWindow : Window
         if (_isExpanded) return;
 
         _isHovered = hovered;
-        IslandSurface.CornerRadius = hovered ? new CornerRadius(0, 0, 13, 13) : new CornerRadius(0, 0, 2.5, 2.5);
-        CompactContent.Visibility = hovered ? Visibility.Visible : Visibility.Collapsed;
+        if (_alertActive) return;
+        var live = (_mediaIsPlaying || _focusRunning) && CompactPillToggle.IsChecked.GetValueOrDefault(true);
+        var showPill = hovered || live;
+        DormantContent.Visibility = live ? Visibility.Collapsed : Visibility.Visible;
+        CompactLiveContent.Visibility = live ? Visibility.Visible : Visibility.Collapsed;
+        CompactContent.Visibility = showPill ? Visibility.Visible : Visibility.Collapsed;
         ExpandedContent.Visibility = Visibility.Collapsed;
-
-        var width = hovered ? HoverWidth : IdleWidth;
-        var height = hovered ? HoverHeight : IdleHeight;
-        AnimateWindowBounds(width, height, animate);
+        IslandSurface.CornerRadius = showPill ? new CornerRadius(0, 0, 20, 20) : new CornerRadius(0, 0, 8, 8);
+        AnimateWindowBounds(showPill ? (live ? LiveWidth : HoverWidth) : IdleWidth, showPill ? (live ? LiveHeight : HoverHeight) : IdleHeight, animate);
     }
 
     private void SetExpanded(bool expanded)
@@ -193,8 +227,11 @@ public partial class MainWindow : Window
         _isExpanded = expanded;
         if (expanded)
         {
-            IslandSurface.CornerRadius = new CornerRadius(0, 0, 26, 26);
+            _collapseTimer.Stop();
+            _previousPageName = _pages.FirstOrDefault(page => page.Visibility == Visibility.Visible)?.Name.Replace("Page", string.Empty) ?? "Home";
+            IslandSurface.CornerRadius = new CornerRadius(0, 0, 28, 28);
             CompactContent.Visibility = Visibility.Collapsed;
+            AlertContent.Visibility = Visibility.Collapsed;
             ExpandedContent.Visibility = Visibility.Visible;
             UpdateClockDisplay();
             AnimateWindowBounds(ExpandedWidth, GetExpandedHeightForCurrentPage());
@@ -237,7 +274,7 @@ public partial class MainWindow : Window
         _isTransitioning = true;
         var duration = new Duration(TransitionDuration);
         // BackEase gives the panel a restrained spring-like settle similar to Nusa's CSS spring curve.
-        var easing = new BackEase { Amplitude = 0.12, EasingMode = EasingMode.EaseOut };
+        var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
 
         var widthAnimation = new DoubleAnimation(Width, targetWidth, duration) { EasingFunction = easing };
         var heightAnimation = new DoubleAnimation(Height, targetHeight, duration) { EasingFunction = easing };
@@ -274,6 +311,7 @@ public partial class MainWindow : Window
         "Focus" => 210,
         "Bible" => 330,
         "Themes" => 350,
+        "Settings" => 250,
         "Weather" => 170,
         "Tray" => 170,
         "Clips" => 170,
@@ -298,6 +336,11 @@ public partial class MainWindow : Window
     private void Navigate_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not Button { Tag: string pageName }) return;
+        if (pageName == "Settings" && _isExpanded)
+        {
+            var active = _pages.FirstOrDefault(p => p.Visibility == Visibility.Visible)?.Name.Replace("Page", string.Empty) ?? "Home";
+            pageName = active == "Settings" ? _previousPageName : "Settings";
+        }
         var page = _pages.FirstOrDefault(p => p.Name == pageName + "Page");
         if (page is null) return;
 
@@ -318,6 +361,7 @@ public partial class MainWindow : Window
             ["Tasks"] = ("✓", "Tasks"),
             ["Focus"] = ("◷", "Focus"),
             ["Bible"] = ("▤", "Bible"),
+            ["Settings"] = ("⚙", "Settings"),
             ["Weather"] = ("☼", "Weather"),
             ["Tray"] = ("▣", "Tray"),
             ["Clips"] = ("▧", "Clips"),
@@ -355,6 +399,7 @@ public partial class MainWindow : Window
         UpdateFocusDisplay();
         FocusStatusText.Text = $"{minutes}-minute focus session in progress.";
         DashboardFocusTimeText.ToolTip = "Focus session running";
+        UpdateCompactLiveContent();
     }
 
     private void TaskSchedule_Click(object sender, RoutedEventArgs e)
@@ -532,6 +577,7 @@ public partial class MainWindow : Window
         var seconds = _focusRemainingSeconds % 60;
         FocusTimeText.Text = $"{minutes:00}:{seconds:00}";
         DashboardFocusTimeText.Text = FocusTimeText.Text;
+        UpdateCompactLiveContent();
     }
 
     private void ThemePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -685,6 +731,7 @@ public partial class MainWindow : Window
         {
             var media = await _mediaPlayer.GetCurrentMediaAsync();
             var hasSession = media is not null;
+            _mediaIsPlaying = media?.IsPlaying == true;
 
             PlayerTitleText.Text = hasSession ? media!.Title : "Nothing playing";
             PlayerArtistText.Text = hasSession
@@ -700,6 +747,8 @@ public partial class MainWindow : Window
             var artwork = CreateArtwork(media?.ArtworkBytes);
             MediaArtworkImage.Source = artwork;
             DashboardArtworkImage.Source = artwork;
+            CompactArtworkImage.Source = artwork;
+            CompactTrackTitle.Text = hasSession ? media!.Title : "Selah";
             DashboardArtworkImage.Visibility = artwork is null ? Visibility.Collapsed : Visibility.Visible;
             MediaArtworkImage.Visibility = artwork is null ? Visibility.Collapsed : Visibility.Visible;
 
@@ -755,6 +804,68 @@ public partial class MainWindow : Window
             PlayerStatusText.Text = "Could not read media session: " + ex.Message;
         }
     }
+
+    private void UpdateCompactLiveContent()
+    {
+        if (!IsLoaded || _isExpanded || _alertActive) return;
+        CompactStatusText.Text = _focusRunning ? FocusTimeText.Text : "28°";
+        CompactTrackTitle.Text = string.IsNullOrWhiteSpace(PlayerTitleText.Text) ? "Selah" : PlayerTitleText.Text;
+        if ((_mediaIsPlaying || _focusRunning) && CompactPillToggle.IsChecked.GetValueOrDefault(true))
+        {
+            CompactContent.Visibility = Visibility.Visible;
+            CompactLiveContent.Visibility = Visibility.Visible;
+            DormantContent.Visibility = Visibility.Collapsed;
+            IslandSurface.CornerRadius = new CornerRadius(0, 0, 20, 20);
+            if (!_isHovered) AnimateWindowBounds(LiveWidth, LiveHeight);
+        }
+        else if (!_isHovered) SetCompactState(false);
+    }
+
+    private void ReminderScheduler_ReminderDue(object? sender, EventArgs e) => ShowReminderAlert();
+
+    private void ShowReminderAlert()
+    {
+        _alertActive = true;
+        _isExpanded = false;
+        _collapseTimer.Stop();
+        AlertVerseReferenceText.Text = _currentBibleVerse?.Reference ?? "Daily Bible reading";
+        CompactContent.Visibility = Visibility.Collapsed;
+        ExpandedContent.Visibility = Visibility.Collapsed;
+        AlertContent.Visibility = Visibility.Visible;
+        IslandSurface.CornerRadius = new CornerRadius(0, 0, 24, 24);
+        AnimateWindowBounds(AlertWidth, AlertHeight);
+    }
+
+    private void DismissReminderAlert()
+    {
+        _alertActive = false;
+        AlertContent.Visibility = Visibility.Collapsed;
+        SetCompactState(false);
+    }
+
+    private void ReminderDismiss_Click(object sender, RoutedEventArgs e) => DismissReminderAlert();
+
+    private void ReminderReadNow_Click(object sender, RoutedEventArgs e)
+    {
+        _alertActive = false;
+        _reminderSettings.LastReadDate = DateOnly.FromDateTime(DateTime.Today);
+        BibleMarkRead_Click(sender, e);
+        foreach (var page in _pages) page.Visibility = page == BiblePage ? Visibility.Visible : Visibility.Collapsed;
+        SetActiveNavigation("Bible");
+        SetExpanded(true);
+    }
+
+    private void ContextPin_Click(object sender, RoutedEventArgs e) => _isPinned = !_isPinned;
+
+    private void ContextSettings_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_isExpanded) SetExpanded(true);
+        foreach (var page in _pages) page.Visibility = page == SettingsPage ? Visibility.Visible : Visibility.Collapsed;
+        SetActiveNavigation("Settings");
+        AnimateWindowBounds(ExpandedWidth, GetExpandedHeight("Settings"));
+    }
+
+    private void ContextExit_Click(object sender, RoutedEventArgs e) => Close();
 
     private static BitmapImage? CreateArtwork(byte[]? bytes)
     {
@@ -838,6 +949,9 @@ public partial class MainWindow : Window
         _focusTimer.Stop();
         _clockTimer.Stop();
         _mediaPlayer.Dispose();
+        _collapseTimer.Stop();
+        _reminderScheduler.ReminderDue -= ReminderScheduler_ReminderDue;
+        _reminderScheduler.Dispose();
         base.OnClosed(e);
     }
 
