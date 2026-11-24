@@ -17,10 +17,10 @@ public sealed partial class NaturalLanguageTaskParser
     [GeneratedRegex(@"\s+in\s+(\d+)\s*h\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex InHoursRegex();
 
-    [GeneratedRegex(@"\s+tonight(?:\s+(\d{1,2}):(\d{2}))?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"\s+tonight(?:\s+(?:at\s+)?)?(\d{1,2})(?::(\d{2}))?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex TonightRegex();
 
-    [GeneratedRegex(@"\s+tomorrow(?:\s+(\d{1,2}):(\d{2}))?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"\s+tomorrow(?:\s+(?:at\s+)?)?(\d{1,2})(?::(\d{2}))?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex TomorrowRegex();
 
     public ParsedTask Parse(string input, DateTime? now = null)
@@ -50,11 +50,19 @@ public sealed partial class NaturalLanguageTaskParser
 
     private static DateTime ParseClock(Match match, DateTime defaultTime, DateTime now)
     {
-        if (!match.Groups[1].Success ||
-            !int.TryParse(match.Groups[1].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var hour) ||
-            !int.TryParse(match.Groups[2].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var minute) ||
-            hour > 23 || minute > 59)
+        if (!match.Groups[1].Success)
             return defaultTime <= now ? defaultTime.AddDays(1) : defaultTime;
+
+        if (!int.TryParse(match.Groups[1].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var hour) ||
+            (match.Groups[2].Success &&
+             !int.TryParse(match.Groups[2].Value, NumberStyles.None, CultureInfo.InvariantCulture, out _)) ||
+            hour > 23)
+            return defaultTime;
+
+        var minute = match.Groups[2].Success
+            ? int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture)
+            : 0;
+        if (minute > 59) return defaultTime;
 
         var result = defaultTime.Date.AddHours(hour).AddMinutes(minute);
         return result <= now && result.Date == now.Date ? result.AddDays(1) : result;
