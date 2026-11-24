@@ -397,7 +397,7 @@ public partial class MainWindow : Window
         if (string.IsNullOrWhiteSpace(parsed.Title))
             return;
 
-        var task = new TaskItem(parsed.Title, _selectedTaskDueAt ?? parsed.DueAt);
+        var task = new TaskItem(parsed.Title, parsed.DueAt ?? _selectedTaskDueAt);
         _selectedTaskDueAt = null;
         TaskInput.ToolTip = "What needs to get done?";
         task.PropertyChanged += Task_PropertyChanged;
