@@ -349,6 +349,7 @@ public partial class MainWindow : Window
         if (pageName == "Settings" && _isExpanded)
         {
             var active = _pages.FirstOrDefault(p => p.Visibility == Visibility.Visible)?.Name.Replace("Page", string.Empty) ?? "Home";
+            if (active != "Settings") _previousPageName = active;
             pageName = active == "Settings" ? _previousPageName : "Settings";
         }
         var page = _pages.FirstOrDefault(p => p.Name == pageName + "Page");
