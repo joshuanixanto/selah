@@ -236,7 +236,7 @@
                         <Border Width="1" Height="17" Background="#1AFFFFFF" Margin="5,0"/>
                         <TextBlock Text="☁  —°" Foreground="#8E8E93" FontSize="9" VerticalAlignment="Center" ToolTip="Weather provider not connected"/>
                         <Border Width="1" Height="17" Background="#1AFFFFFF" Margin="5,0"/>
-                        <Button Style="{StaticResource TopNavButton}" Content="⌖" Tag="Pin" ToolTip="Pinning not implemented" IsEnabled="False"/>
+                        <Button Style="{StaticResource TopNavButton}" Content="⌖" Tag="Pin" ToolTip="Pin / unpin island" Click="PinToggle_Click" IsEnabled="True"/>
                         <Button Style="{StaticResource TopNavButton}" Content="⚙" Tag="Settings" ToolTip="Settings" Click="Navigate_Click"/>
                     </StackPanel>
                     <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
