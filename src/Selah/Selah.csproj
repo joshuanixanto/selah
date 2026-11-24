@@ -10,4 +10,9 @@
     <AssemblyName>Selah</AssemblyName>
     <RootNamespace>Selah</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Data\\bible-verses.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
