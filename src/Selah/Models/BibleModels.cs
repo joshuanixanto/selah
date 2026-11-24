@@ -17,4 +17,7 @@ public sealed record BibleVerse(
     int Chapter,
     int Verse,
     string Text,
-    BibleTranslation Translation);
+    BibleTranslation Translation)
+{
+    public string Reference => $"{BookId} {Chapter}:{Verse}";
+}
