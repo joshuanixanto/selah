@@ -581,6 +581,7 @@ public partial class MainWindow : Window
             _focusTimer.Stop();
             FocusStatusText.Text = "Session complete. Take a break.";
             DashboardFocusTimeText.ToolTip = "Session complete";
+            UpdateCompactLiveContent();
         }
     }
 
@@ -840,6 +841,7 @@ public partial class MainWindow : Window
         if ((_mediaIsPlaying || _focusRunning) && CompactPillToggle.IsChecked.GetValueOrDefault(true))
         {
             CompactContent.Visibility = Visibility.Visible;
+            AnimateContentOpacity(CompactContent, 1, true);
             CompactLiveContent.Visibility = Visibility.Visible;
             DormantContent.Visibility = Visibility.Collapsed;
             IslandSurface.CornerRadius = new CornerRadius(0, 0, 20, 20);
