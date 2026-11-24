@@ -11,7 +11,7 @@
     <RootNamespace>Selah</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Data\\bible-verses.json">
+    <Content Include="Data/bible-verses.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
