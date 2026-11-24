@@ -394,83 +394,75 @@
                                 </StackPanel>
 
                                 <StackPanel x:Name="BiblePage" Visibility="Collapsed">
-                                    
-                                    
-
-                                    <Border Style="{StaticResource Card}">
-                                        <StackPanel>
-                                            
-                                            <Grid Margin="0,2,0,0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="10"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel>
-                                                    
-                                                    <ComboBox x:Name="BibleTranslationPicker" Height="26" SelectedIndex="0">
-                                                        <ComboBoxItem Content="TB · Terjemahan Baru"/>
-                                                        <ComboBoxItem Content="NIV · New International Version"/>
-                                                    </ComboBox>
-                                                </StackPanel>
-                                                <StackPanel Grid.Column="2">
-                                                    
-                                                    <ComboBox x:Name="BibleBookPicker" Height="26" SelectedIndex="0">
-                                                        <ComboBoxItem Content="Genesis"/><ComboBoxItem Content="Exodus"/><ComboBoxItem Content="Leviticus"/><ComboBoxItem Content="Numbers"/><ComboBoxItem Content="Deuteronomy"/>
-                                                        <ComboBoxItem Content="Joshua"/><ComboBoxItem Content="Judges"/><ComboBoxItem Content="Ruth"/><ComboBoxItem Content="1 Samuel"/><ComboBoxItem Content="2 Samuel"/>
-                                                        <ComboBoxItem Content="1 Kings"/><ComboBoxItem Content="2 Kings"/><ComboBoxItem Content="1 Chronicles"/><ComboBoxItem Content="2 Chronicles"/><ComboBoxItem Content="Ezra"/>
-                                                        <ComboBoxItem Content="Nehemiah"/><ComboBoxItem Content="Esther"/><ComboBoxItem Content="Job"/><ComboBoxItem Content="Psalms"/><ComboBoxItem Content="Proverbs"/>
-                                                        <ComboBoxItem Content="Ecclesiastes"/><ComboBoxItem Content="Song of Songs"/><ComboBoxItem Content="Isaiah"/><ComboBoxItem Content="Jeremiah"/><ComboBoxItem Content="Lamentations"/>
-                                                        <ComboBoxItem Content="Ezekiel"/><ComboBoxItem Content="Daniel"/><ComboBoxItem Content="Hosea"/><ComboBoxItem Content="Joel"/><ComboBoxItem Content="Amos"/>
-                                                        <ComboBoxItem Content="Obadiah"/><ComboBoxItem Content="Jonah"/><ComboBoxItem Content="Micah"/><ComboBoxItem Content="Nahum"/><ComboBoxItem Content="Habakkuk"/>
-                                                        <ComboBoxItem Content="Zephaniah"/><ComboBoxItem Content="Haggai"/><ComboBoxItem Content="Zechariah"/><ComboBoxItem Content="Malachi"/>
-                                                        <ComboBoxItem Content="Matthew"/><ComboBoxItem Content="Mark"/><ComboBoxItem Content="Luke"/><ComboBoxItem Content="John"/><ComboBoxItem Content="Acts"/>
-                                                        <ComboBoxItem Content="Romans"/><ComboBoxItem Content="1 Corinthians"/><ComboBoxItem Content="2 Corinthians"/><ComboBoxItem Content="Galatians"/><ComboBoxItem Content="Ephesians"/>
-                                                        <ComboBoxItem Content="Philippians"/><ComboBoxItem Content="Colossians"/><ComboBoxItem Content="1 Thessalonians"/><ComboBoxItem Content="2 Thessalonians"/><ComboBoxItem Content="1 Timothy"/>
-                                                        <ComboBoxItem Content="2 Timothy"/><ComboBoxItem Content="Titus"/><ComboBoxItem Content="Philemon"/><ComboBoxItem Content="Hebrews"/><ComboBoxItem Content="James"/>
-                                                        <ComboBoxItem Content="1 Peter"/><ComboBoxItem Content="2 Peter"/><ComboBoxItem Content="1 John"/><ComboBoxItem Content="2 John"/><ComboBoxItem Content="3 John"/>
-                                                        <ComboBoxItem Content="Jude"/><ComboBoxItem Content="Revelation"/>
-                                                    </ComboBox>
-                                                </StackPanel>
-                                            </Grid>
-                                            <TextBlock Text="Ch." Style="{StaticResource Muted}" Margin="0,5,0,3"/>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox x:Name="BibleChapterInput" Text="1" Width="64" VerticalContentAlignment="Center"/>
-                                                <Button Style="{StaticResource ActionButton}" Content="↵" ToolTip="Open chapter" IsEnabled="False" Padding="8,3" Margin="5,0,0,0"/>
-                                                <Button Style="{StaticResource SecondaryButton}" Content="☆" ToolTip="Bookmark" IsEnabled="False" Padding="8,3"/>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Border>
-
-                                    <Border Style="{StaticResource Card}">
-                                        <StackPanel>
-                                            
-                                            <TextBox x:Name="BibleSearchInput" Height="26" Margin="0,3,0,4" ToolTip="Search will be available after a licensed Bible text provider is connected."/>
-                                            <Button Style="{StaticResource SecondaryButton}" Content="⌕" ToolTip="Search Bible" IsEnabled="False" HorizontalAlignment="Left" Padding="8,3"/>
-                                            
-                                        </StackPanel>
-                                    </Border>
-
-                                    <Border Style="{StaticResource Card}">
-                                        <StackPanel>
-                                            
-                                            <TextBlock Text="Select a passage" Style="{StaticResource Heading}" Margin="0,2,0,3"/>
-                                            <TextBlock Text="Text source not connected" Style="{StaticResource Muted}" FontSize="9"/>
-                                            <Border Height="1" Background="{DynamicResource IslandBorderBrush}" Margin="0,6,0,5"/>
-                                            
-                                            <TextBlock Text="TB · NIV" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="9"/>
-                                        </StackPanel>
-                                    </Border>
-
-                                    <Border Style="{StaticResource Card}">
-                                        <StackPanel>
-                                            
-                                            <TextBlock Text="☆ Bookmarks   ✎ Notes   ▤ Plans" Style="{StaticResource Heading}" FontSize="10"/>
-                                            
-                                        </StackPanel>
-                                    </Border>
-                                </StackPanel>
-                                <StackPanel x:Name="WeatherPage" Visibility="Collapsed">
+    <Grid Margin="2,4,2,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.1*"/>
+            <ColumnDefinition Width="18"/>
+            <ColumnDefinition Width="0.9*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <DockPanel Margin="0,0,0,10">
+                <TextBlock x:Name="BibleVerseKindText" Text="VERSE OF THE DAY" Foreground="#34D399" FontSize="8" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Border Background="#18181B" CornerRadius="999" Padding="8,3" DockPanel.Dock="Right">
+                    <TextBlock Text="WEB · PUBLIC DOMAIN" Foreground="#8E8E93" FontSize="7" FontWeight="SemiBold"/>
+                </Border>
+            </DockPanel>
+            <TextBlock x:Name="BibleVerseText" Text="Choose a verse or select Random Verse." Foreground="#FFFFFF" FontSize="15" FontWeight="Medium" TextWrapping="Wrap" LineHeight="22" MaxHeight="150"/>
+            <TextBlock x:Name="BibleVerseReferenceText" Text="World English Bible" Foreground="#8E8E93" FontSize="9" FontWeight="SemiBold" Margin="0,10,0,12"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource ActionButton}" Content="⤨  Random Verse" Click="BibleRandom_Click" Margin="0,0,7,0"/>
+                <Button Style="{StaticResource SecondaryButton}" Content="Copy Verse" Click="BibleCopy_Click"/>
+                <TextBlock x:Name="BibleCopyStatusText" Text="" Foreground="#34D399" FontSize="8" VerticalAlignment="Center" Margin="8,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+        <Border Grid.Column="1" Width="1" Background="#1AFFFFFF" HorizontalAlignment="Center" Margin="0,2"/>
+        <StackPanel Grid.Column="2">
+            <TextBlock Text="SCRIPTURE SEARCH" Foreground="#8E8E93" FontSize="8" FontWeight="Bold" Margin="0,0,0,7"/>
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Style="{StaticResource ActionButton}" Content="⌕" Click="BibleSearch_Click" Padding="9,5" Margin="5,0,0,0"/>
+                <TextBox x:Name="BibleSearchInput" Height="31" FontSize="9" VerticalContentAlignment="Center"
+                         ToolTip="Search a reference (John 3:16) or keyword (peace)" KeyDown="BibleSearchInput_KeyDown"/>
+            </DockPanel>
+            <ListBox x:Name="BibleSearchResults" Height="112" Margin="0,7,0,9"
+                     Background="Transparent" BorderThickness="0" Foreground="#FFFFFF"
+                     SelectionChanged="BibleSearchResults_SelectionChanged"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="7,5"/>
+                        <Setter Property="Margin" Value="0,0,0,3"/>
+                        <Setter Property="Background" Value="#18181B"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding BookId, StringFormat={}{0} {1}:{2}}" Foreground="#FFFFFF" FontSize="8" FontWeight="SemiBold">
+                                <TextBlock.DataContext>
+                                    <Binding/>
+                                </TextBlock.DataContext>
+                            </TextBlock>
+                            <TextBlock Text="{Binding Text}" Foreground="#8E8E93" FontSize="7" TextWrapping="Wrap" MaxHeight="28"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Border Height="1" Background="#1AFFFFFF" Margin="0,0,0,8"/>
+            <DockPanel>
+                <TextBlock Text="DAILY READING" Foreground="#8E8E93" FontSize="8" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock x:Name="BibleStreakText" Text="0-day streak" Foreground="#34D399" FontSize="8" DockPanel.Dock="Right"/>
+            </DockPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <CheckBox x:Name="BibleReminderToggle" Content="Reminder" IsChecked="True" Foreground="#FFFFFF" FontSize="8" VerticalAlignment="Center"/>
+                <TextBox x:Name="BibleReminderTimeInput" Text="07:30" Width="54" Height="23" FontSize="8" Margin="10,0,0,0" VerticalContentAlignment="Center"/>
+                <Button Style="{StaticResource SecondaryButton}" Content="Mark as read" Click="BibleMarkRead_Click" Padding="8,4" Margin="8,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</StackPanel>
+<StackPanel x:Name="WeatherPage" Visibility="Collapsed">
                                     
                                     
                                     <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="☼ Weather" Style="{StaticResource Heading}"/><TextBlock Text="Provider not connected" Style="{StaticResource Muted}" FontSize="9"/></StackPanel></Border>
