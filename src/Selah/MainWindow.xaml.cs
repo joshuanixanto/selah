@@ -824,6 +824,19 @@ public partial class MainWindow : Window
         if (!IsLoaded || _isExpanded || _alertActive) return;
         CompactStatusText.Text = _focusRunning ? FocusTimeText.Text : "28°";
         CompactTrackTitle.Text = string.IsNullOrWhiteSpace(PlayerTitleText.Text) ? "Selah" : PlayerTitleText.Text;
+        if (_mediaIsPlaying)
+        {
+            EqBar1.BeginAnimation(FrameworkElement.HeightProperty, new DoubleAnimation(4, 10, TimeSpan.FromMilliseconds(320)) { AutoReverse = true, RepeatBehavior = RepeatBehavior.Forever });
+            EqBar2.BeginAnimation(FrameworkElement.HeightProperty, new DoubleAnimation(7, 13, TimeSpan.FromMilliseconds(410)) { AutoReverse = true, RepeatBehavior = RepeatBehavior.Forever });
+            EqBar3.BeginAnimation(FrameworkElement.HeightProperty, new DoubleAnimation(5, 11, TimeSpan.FromMilliseconds(360)) { AutoReverse = true, RepeatBehavior = RepeatBehavior.Forever });
+        }
+        else
+        {
+            EqBar1.BeginAnimation(FrameworkElement.HeightProperty, null);
+            EqBar2.BeginAnimation(FrameworkElement.HeightProperty, null);
+            EqBar3.BeginAnimation(FrameworkElement.HeightProperty, null);
+            EqBar1.Height = 6; EqBar2.Height = 11; EqBar3.Height = 8;
+        }
         if ((_mediaIsPlaying || _focusRunning) && CompactPillToggle.IsChecked.GetValueOrDefault(true))
         {
             CompactContent.Visibility = Visibility.Visible;
