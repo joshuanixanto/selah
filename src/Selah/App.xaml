@@ -3,8 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <SolidColorBrush x:Key="IslandBackgroundBrush" Color="#171923" />
-        <SolidColorBrush x:Key="AccentBrush" Color="#A5B4FC" />
-        <SolidColorBrush x:Key="MutedTextBrush" Color="#9CA3AF" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/ClassicTheme.xaml"/>
+                <ResourceDictionary Source="Themes/NusaControls.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Legacy aliases retained for the current MainWindow and ThemeService. -->
+            <SolidColorBrush x:Key="IslandBackgroundBrush" Color="#000000"/>
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#18181B"/>
+            <SolidColorBrush x:Key="AccentBrush" Color="#34D399"/>
+            <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#60A5FA"/>
+            <SolidColorBrush x:Key="PrimaryTextBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="MutedTextBrush" Color="#8E8E93"/>
+            <SolidColorBrush x:Key="IslandBorderBrush" Color="#1AFFFFFF"/>
+            <SolidColorBrush x:Key="SuccessBrush" Color="#34D399"/>
+            <SolidColorBrush x:Key="WarningBrush" Color="#F59E0B"/>
+            <SolidColorBrush x:Key="ErrorBrush" Color="#FF6B78"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

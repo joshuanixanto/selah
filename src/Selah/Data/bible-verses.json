@@ -1,0 +1,182 @@
+[
+  {
+    "BookId": "John",
+    "Chapter": 3,
+    "Verse": 16,
+    "Text": "For God so loved the world, that he gave his one and only Son, that whoever believes in him should not perish, but have eternal life."
+  },
+  {
+    "BookId": "Philippians",
+    "Chapter": 4,
+    "Verse": 6,
+    "Text": "In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God."
+  },
+  {
+    "BookId": "Philippians",
+    "Chapter": 4,
+    "Verse": 7,
+    "Text": "And the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus."
+  },
+  {
+    "BookId": "Psalm",
+    "Chapter": 23,
+    "Verse": 1,
+    "Text": "Yahweh is my shepherd: I shall lack nothing."
+  },
+  {
+    "BookId": "Psalm",
+    "Chapter": 23,
+    "Verse": 4,
+    "Text": "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me."
+  },
+  {
+    "BookId": "Proverbs",
+    "Chapter": 3,
+    "Verse": 5,
+    "Text": "Trust in Yahweh with all your heart, and don't lean on your own understanding."
+  },
+  {
+    "BookId": "Proverbs",
+    "Chapter": 3,
+    "Verse": 6,
+    "Text": "In all your ways acknowledge him, and he will make your paths straight."
+  },
+  {
+    "BookId": "Isaiah",
+    "Chapter": 41,
+    "Verse": 10,
+    "Text": "Don't you be afraid, for I am with you. Don't be dismayed, for I am your God. I will strengthen you. Yes, I will help you. Yes, I will uphold you with the right hand of my righteousness."
+  },
+  {
+    "BookId": "Joshua",
+    "Chapter": 1,
+    "Verse": 9,
+    "Text": "Haven't I commanded you? Be strong and courageous. Don't be afraid. Don't be discouraged, for Yahweh your God is with you wherever you go."
+  },
+  {
+    "BookId": "Matthew",
+    "Chapter": 11,
+    "Verse": 28,
+    "Text": "Come to me, all you who labor and are heavily burdened, and I will give you rest."
+  },
+  {
+    "BookId": "Romans",
+    "Chapter": 8,
+    "Verse": 28,
+    "Text": "We know that all things work together for good for those who love God, to those who are called according to his purpose."
+  },
+  {
+    "BookId": "Romans",
+    "Chapter": 12,
+    "Verse": 2,
+    "Text": "Don't be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what is the good, well-pleasing, and perfect will of God."
+  },
+  {
+    "BookId": "1 Corinthians",
+    "Chapter": 13,
+    "Verse": 4,
+    "Text": "Love is patient and is kind. Love doesn't envy. Love doesn't brag, is not proud."
+  },
+  {
+    "BookId": "1 Corinthians",
+    "Chapter": 16,
+    "Verse": 14,
+    "Text": "Let all that you do be done in love."
+  },
+  {
+    "BookId": "2 Timothy",
+    "Chapter": 1,
+    "Verse": 7,
+    "Text": "For God didn't give us a spirit of fear, but of power, love, and self-control."
+  },
+  {
+    "BookId": "Psalm",
+    "Chapter": 46,
+    "Verse": 1,
+    "Text": "God is our refuge and strength, a very present help in trouble."
+  },
+  {
+    "BookId": "Psalm",
+    "Chapter": 119,
+    "Verse": 105,
+    "Text": "Your word is a lamp to my feet, and a light for my path."
+  },
+  {
+    "BookId": "Matthew",
+    "Chapter": 6,
+    "Verse": 33,
+    "Text": "But seek first God's Kingdom, and his righteousness; and all these things will be given to you as well."
+  },
+  {
+    "BookId": "John",
+    "Chapter": 14,
+    "Verse": 27,
+    "Text": "Peace I leave with you. My peace I give to you; not as the world gives, I give to you. Don't let your heart be troubled, neither let it be fearful."
+  },
+  {
+    "BookId": "Romans",
+    "Chapter": 15,
+    "Verse": 13,
+    "Text": "Now may the God of hope fill you with all joy and peace in believing, that you may abound in hope, in the power of the Holy Spirit."
+  },
+  {
+    "BookId": "Hebrews",
+    "Chapter": 11,
+    "Verse": 1,
+    "Text": "Now faith is assurance of things hoped for, proof of things not seen."
+  },
+  {
+    "BookId": "Micah",
+    "Chapter": 6,
+    "Verse": 8,
+    "Text": "He has shown you, O man, what is good. What does Yahweh require of you, but to act justly, to love mercy, and to walk humbly with your God?"
+  },
+  {
+    "BookId": "1 Peter",
+    "Chapter": 5,
+    "Verse": 7,
+    "Text": "Casting all your worries on him, because he cares for you."
+  },
+  {
+    "BookId": "Galatians",
+    "Chapter": 5,
+    "Verse": 22,
+    "Text": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faith,"
+  },
+  {
+    "BookId": "Ephesians",
+    "Chapter": 2,
+    "Verse": 10,
+    "Text": "For we are his workmanship, created in Christ Jesus for good works, which God prepared before that we would walk in them."
+  },
+  {
+    "BookId": "Lamentations",
+    "Chapter": 3,
+    "Verse": 22,
+    "Text": "It is because of Yahweh's loving kindnesses that we are not consumed, because his compassion doesn't fail."
+  },
+  {
+    "BookId": "Lamentations",
+    "Chapter": 3,
+    "Verse": 23,
+    "Text": "They are new every morning; great is your faithfulness."
+  },
+  {
+    "BookId": "Psalm",
+    "Chapter": 37,
+    "Verse": 4,
+    "Text": "Also delight yourself in Yahweh, and he will give you the desires of your heart."
+  },
+  {
+    "BookId": "Matthew",
+    "Chapter": 5,
+    "Verse": 16,
+    "Text": "Even so, let your light shine before men, that they may see your good works and glorify your Father who is in heaven."
+  },
+  {
+    "BookId": "John",
+    "Chapter": 15,
+    "Verse": 5,
+    "Text": "I am the vine. You are the branches. He who remains in me, and I in him, the same bears much fruit, for apart from me you can do nothing."
+  }
+]
